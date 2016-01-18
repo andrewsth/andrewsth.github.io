@@ -35,7 +35,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="JCIP,Java," />
 
 
 
@@ -51,15 +51,22 @@
 
 
 
-<meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="远处走来一头牛">
-<meta property="og:url" content="http://bettersth.xyz/index.html">
+<meta name="description" content="第二章 线程安全性线程安全性
+当多个线程访问某个类时,这个类始终都能表现出正确的行为
+无状态对象一定是线程安全的12345678@ThreadSafepublic class StatelessFactorizer extends GenericServlet implements Servlet &amp;#123;    public void service(ServletRequest req,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发编程实战 笔记一">
+<meta property="og:url" content="http://bettersth.xyz/2016/01/18/java-concurrency-in-practice-notes-one/index.html">
 <meta property="og:site_name" content="远处走来一头牛">
-<meta property="og:description">
+<meta property="og:description" content="第二章 线程安全性线程安全性
+当多个线程访问某个类时,这个类始终都能表现出正确的行为
+无状态对象一定是线程安全的12345678@ThreadSafepublic class StatelessFactorizer extends GenericServlet implements Servlet &amp;#123;    public void service(ServletRequest req,">
+<meta property="og:updated_time" content="2016-01-18T09:42:08.211Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="远处走来一头牛">
-<meta name="twitter:description">
+<meta name="twitter:title" content="Java并发编程实战 笔记一">
+<meta name="twitter:description" content="第二章 线程安全性线程安全性
+当多个线程访问某个类时,这个类始终都能表现出正确的行为
+无状态对象一定是线程安全的12345678@ThreadSafepublic class StatelessFactorizer extends GenericServlet implements Servlet &amp;#123;    public void service(ServletRequest req,">
 
 
 
@@ -71,7 +78,7 @@
   };
 </script>
 
-  <title> 远处走来一头牛 </title>
+  <title> Java并发编程实战 笔记一 | 远处走来一头牛 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -92,9 +99,7 @@
 
 
 
-  <div class="container one-column 
-   page-home 
-">
+  <div class="container one-column page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -171,24 +176,9 @@
       <div class="main-inner">
         <div id="content" class="content">
           
-  <section id="posts" class="posts-expand">
 
+  <div id="posts" class="posts-expand">
     
-
-    
-    
-      
-      
-        
-        
-        
-      
-
-      
-    
-
-    
-      
 
   
   
@@ -208,10 +198,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/01/18/java-concurrency-in-practice-notes-one/" itemprop="url">
-                  Java并发编程实战 笔记一
-                </a>
+                Java并发编程实战 笔记一
               
             
           </h1>
@@ -251,10 +238,7 @@
       
 
       
-        
-          <span itemprop="articleBody">
-            
-              <h2 id="u7B2C_u4E8C_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027"><a href="#u7B2C_u4E8C_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027" class="headerlink" title="第二章 线程安全性"></a>第二章 线程安全性</h2><h3 id="u7EBF_u7A0B_u5B89_u5168_u6027"><a href="#u7EBF_u7A0B_u5B89_u5168_u6027" class="headerlink" title="线程安全性"></a>线程安全性</h3><ol>
+        <span itemprop="articleBody"><h2 id="u7B2C_u4E8C_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027"><a href="#u7B2C_u4E8C_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027" class="headerlink" title="第二章 线程安全性"></a>第二章 线程安全性</h2><h3 id="u7EBF_u7A0B_u5B89_u5168_u6027"><a href="#u7EBF_u7A0B_u5B89_u5168_u6027" class="headerlink" title="线程安全性"></a>线程安全性</h3><ol>
 <li>当多个线程访问某个类时,这个类始终都能表现出正确的行为</li>
 <li>无状态对象一定是线程安全的<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@ThreadSafe</span></span><br><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">StatelessFactorizer</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">GenericServlet</span> <span class="title">implements</span> <span class="title">Servlet</span> &#123;</span></span><br><span class="line">    public void service(<span class="type">ServletRequest</span> req, <span class="type">ServletResponse</span> resp) &#123;</span><br><span class="line">        <span class="type">BigInteger</span> i = extractFromRequest(req);</span><br><span class="line">        <span class="type">BigInteger</span>[] factors = factor(i);</span><br><span class="line">        encodeIntoResponse(resp, factors);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
@@ -307,225 +291,48 @@
 <blockquote>
 <p>对执行时间较长的计算或无法快速完成的操作(网络I/O、控制台I/O) 一定不要持有锁</p>
 </blockquote>
-
-            
-          </span>
-        
+</span>
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/01/18/modify-NameCheap-DNS/" itemprop="url">
-                  NameCheap注册商域名修改DNS地址（新版）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2016-01-18T13:53:38+08:00" content="2016-01-18">
-              2016-01-18
-            </time>
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/JCIP/" rel="tag">#JCIP</a>
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/01/18/modify-NameCheap-DNS/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/18/modify-NameCheap-DNS/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
+            <a href="/tags/Java/" rel="tag">#Java</a>
           
-
-          
-
         </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
       
 
       
-        
-          <span itemprop="articleBody">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <p>因为域名是在NameCheap上，使用DNSPOD解析域名，自然需要做相应的配置，可是DNSPOD官方网站的文档也是旧版的，为了方便有需要的朋友，现在将新版的配置方法共享出来。<br>旧版地址：<a href="https://support.dnspod.cn/Kb/showarticle/?qtype=%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B&amp;tsid=47" title="NameCheap注册商域名修改DNS地址" target="_blank" rel="external">NameCheap注册商域名修改DNS地址</a></p>
-<ol>
-<li>登录<a href="http:www.namecheap.com" title="NameCheap" target="_blank" rel="external">NameCheap</a></li>
-<li>打开<a href="https://ap.www.namecheap.com/Domains/DomainOnly" title="域名管理列表" target="_blank" rel="external">域名管理列表</a><br><img src="http://7xp9un.com1.z0.glb.clouddn.com/blog/modifyDNS/screenshot1.png" alt="域名管理列表"></li>
-<li>选择对应的域名点击点击manager进行设置</li>
-<li>在Nameservers选项下选择Custom<br><img src="http://7xp9un.com1.z0.glb.clouddn.com/blog/modifyDNS/screenshot2.png" alt="NameServers类型选择"></li>
-<li>点击Add NameServer输入dnspod的DNS短地址：<br> f1g1ns1.dnspod.net<br> f1g1ns2.dnspod.net<br><img src="http://7xp9un.com1.z0.glb.clouddn.com/blog/modifyDNS/screenshot3.png" alt="DNS域名管理"></li>
-<li>设置完毕，等待全球递归DNS服务器刷新（最多72小时）。</li>
-</ol>
-
+              <a href="/2016/01/18/modify-NameCheap-DNS/" rel="next" title="NameCheap注册商域名修改DNS地址（新版）">
+                <i class="fa fa-chevron-left"></i> NameCheap注册商域名修改DNS地址（新版）
+              </a>
             
-          </span>
-        
-      
-    </div>
+          </div>
 
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
+          <div class="post-nav-prev post-nav-item">
             
-            
-              
-                
-                <a class="post-title-link" href="/2015/12/29/java-double-precision/" itemprop="url">
-                  Java double计算精度问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2015-12-29T18:09:21+08:00" content="2015-12-29">
-              2015-12-29
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/12/29/java-double-precision/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/29/java-double-precision/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
       
 
       
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="java_u4E2D_u8FDB_u884Cdouble_u6570_u636E_u8BA1_u7B97_u7684_u65F6_u5019_u4F1A_u51FA_u73B0_u7CBE_u5EA6_u95EE_u9898_u3002"><a href="#java_u4E2D_u8FDB_u884Cdouble_u6570_u636E_u8BA1_u7B97_u7684_u65F6_u5019_u4F1A_u51FA_u73B0_u7CBE_u5EA6_u95EE_u9898_u3002" class="headerlink" title="java中进行double数据计算的时候会出现精度问题。"></a>java中进行double数据计算的时候会出现精度问题。</h1><h2 id="u95EE_u9898_u590D_u73B0_uFF1A"><a href="#u95EE_u9898_u590D_u73B0_uFF1A" class="headerlink" title="问题复现："></a>问题复现：</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> DoublePrecision &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Double add :"</span> + (<span class="number">1.01</span> + <span class="number">2.01</span>));</span><br><span class="line">        System.out.println(<span class="string">"Double sub :"</span> + (<span class="number">2.01</span> - <span class="number">1.02</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>得到如下结果<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">Double</span> <span class="tag">add</span> <span class="pseudo">:3</span><span class="class">.0199999999999996</span></span><br><span class="line"><span class="tag">Double</span> <span class="tag">sub</span> <span class="pseudo">:0</span><span class="class">.9899999999999998</span></span><br></pre></td></tr></table></figure></p>
-<p>可以看到精度出现了问题。所以对于高精度的运算double是不适合的。<br>为什么会出现精度问题可以参考这篇博文<a href="http://blog.csdn.net/abing37/article/details/5332798" title="java float double精度为什么会丢失？浅谈java的浮点数精度问题" target="_blank" rel="external">java float double精度为什么会丢失？浅谈java的浮点数精度问题</a></p>
-<h2 id="u5982_u4F55_u89E3_u51B3_uFF1F"><a href="#u5982_u4F55_u89E3_u51B3_uFF1F" class="headerlink" title="如何解决？"></a>如何解决？</h2><p>使用BigDecimal类。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">import java.math.BigDecimal;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> DoublePrecision &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Double add :"</span> + (<span class="number">1.01</span> + <span class="number">2.01</span>));</span><br><span class="line">        System.out.println(<span class="string">"Double sub :"</span> + (<span class="number">2.01</span> - <span class="number">1.02</span>));</span><br><span class="line">        System.out.println(<span class="string">"BigDecimal add :"</span> + BigDecimalUtil.add(<span class="number">1.01</span>, <span class="number">2.01</span>));</span><br><span class="line">        System.out.println(<span class="string">"BigDecimal sub :"</span> + BigDecimalUtil.subtract(<span class="number">2.01</span>, <span class="number">1.02</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> BigDecimalUtil &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> BigDecimal <span class="title">add</span><span class="params">(<span class="keyword">double</span> num1, <span class="keyword">double</span> num2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BigDecimal.valueOf(num1).add(BigDecimal.valueOf(num2));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> BigDecimal <span class="title">subtract</span><span class="params">(<span class="keyword">double</span> num1, <span class="keyword">double</span> num2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> BigDecimal(Double.toString(num1)).subtract(<span class="keyword">new</span> BigDecimal(Double.toString(num2)));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>结果如下：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">Double</span> <span class="tag">add</span> <span class="pseudo">:3</span><span class="class">.0199999999999996</span></span><br><span class="line"><span class="tag">Double</span> <span class="tag">sub</span> <span class="pseudo">:0</span><span class="class">.9899999999999998</span></span><br><span class="line"><span class="tag">BigDecimal</span> <span class="tag">add</span> <span class="pseudo">:3</span><span class="class">.02</span></span><br><span class="line"><span class="tag">BigDecimal</span> <span class="tag">sub</span> <span class="pseudo">:0</span><span class="class">.99</span></span><br></pre></td></tr></table></figure></p>
-<p>可以看到使用BigDecimal能够解决double计算的精度问题。</p>
-<blockquote>
-<p>Open Declaration BigDecimal java.math.BigDecimal.valueOf(double val)<br>Translates a double into a BigDecimal, using the double’s canonical string representation provided by the Double.toString(double) method. </p>
-</blockquote>
-<p>根据Java文档的介绍<code>BigDecimal.valueOf(double val)</code>与<code>new BigDecimal(Double.toString(double))</code>等价, 此处<code>add()</code>使用<code>BigDecimal.valueOf(double val)</code>,<code>subtract()</code> 使用了不同的方法<code>new BigDecimal(Double.toString(double))</code>。</p>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>对高精度运算使用BigDecimal,尽量避免使用double计算以免精度丢失。</p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
 
-  </section>
-
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
         </div>
@@ -534,6 +341,14 @@
 
 
         
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/01/18/java-concurrency-in-practice-notes-one/"
+           data-title="Java并发编程实战 笔记一" data-url="http://bettersth.xyz/2016/01/18/java-concurrency-in-practice-notes-one/">
+      </div>
+    
+  </div>
+
 
       </div>
 
@@ -554,8 +369,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" src="http://7xp9un.com1.z0.glb.clouddn.com/blog/avatar.jpg" alt="sth" itemprop="image"/>
           <p class="site-author-name" itemprop="name">sth</p>
@@ -600,6 +424,23 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u7B2C_u4E8C_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027"><span class="nav-number">1.</span> <span class="nav-text">第二章 线程安全性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u7EBF_u7A0B_u5B89_u5168_u6027"><span class="nav-number">1.1.</span> <span class="nav-text">线程安全性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u539F_u5B50_u6027"><span class="nav-number">1.2.</span> <span class="nav-text">原子性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u52A0_u9501_u673A_u5236"><span class="nav-number">1.3.</span> <span class="nav-text">加锁机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7528_u9501_u6765_u4FDD_u62A4_u72B6_u6001"><span class="nav-number">1.4.</span> <span class="nav-text">用锁来保护状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6D3B_u8DC3_u6027_u4E0E_u6027_u80FD"><span class="nav-number">1.5.</span> <span class="nav-text">活跃性与性能</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
       
 
     </div>
@@ -687,6 +528,167 @@
   <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
 
   
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
 
   <script type="text/javascript" src="/js/bootstrap.js"></script>
 
