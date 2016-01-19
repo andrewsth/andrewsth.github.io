@@ -1,5 +1,11 @@
 <!doctype html>
-<html class="theme-next   use-motion ">
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -32,7 +38,7 @@
 
 <link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
 
 
   <meta name="keywords" content="Hexo, NexT" />
@@ -44,7 +50,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
 
 
 
@@ -64,10 +70,16 @@
 
 
 <script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
   var CONFIG = {
-    scheme: '',
-    sidebar: 'post',
-    motion: true
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
   };
 </script>
 
@@ -76,15 +88,6 @@
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-  <!--[if lte IE 8]>
-  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
-    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
-      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
-           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
-           style='margin-left:auto;margin-right:auto;display: block;'/>
-    </a>
-  </div>
-<![endif]-->
   
 
 
@@ -102,9 +105,16 @@
 
 
 
-  <div class="container one-column 
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left 
    page-home 
-">
+ ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -168,6 +178,7 @@
 
       
       
+      
     </ul>
   
 
@@ -179,8 +190,9 @@
 
     <main id="main" class="main">
       <div class="main-inner">
-        <div id="content" class="content">
-          
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
   <section id="posts" class="posts-expand">
 
     
@@ -229,7 +241,10 @@
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2016-01-18T17:38:27+08:00" content="2016-01-18">
               2016-01-18
             </time>
@@ -250,21 +265,22 @@
 
           
 
+          
+          
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-              <h2 id="u7B2C_u4E8C_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027"><a href="#u7B2C_u4E8C_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027" class="headerlink" title="第二章 线程安全性"></a>第二章 线程安全性</h2><h3 id="u7EBF_u7A0B_u5B89_u5168_u6027"><a href="#u7EBF_u7A0B_u5B89_u5168_u6027" class="headerlink" title="线程安全性"></a>线程安全性</h3><ol>
+          
+            <h2 id="u7B2C_u4E8C_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027"><a href="#u7B2C_u4E8C_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027" class="headerlink" title="第二章 线程安全性"></a>第二章 线程安全性</h2><h3 id="u7EBF_u7A0B_u5B89_u5168_u6027"><a href="#u7EBF_u7A0B_u5B89_u5168_u6027" class="headerlink" title="线程安全性"></a>线程安全性</h3><ol>
 <li>当多个线程访问某个类时,这个类始终都能表现出正确的行为</li>
 <li>无状态对象一定是线程安全的<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@ThreadSafe</span></span><br><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">StatelessFactorizer</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">GenericServlet</span> <span class="title">implements</span> <span class="title">Servlet</span> &#123;</span></span><br><span class="line">    public void service(<span class="type">ServletRequest</span> req, <span class="type">ServletResponse</span> resp) &#123;</span><br><span class="line">        <span class="type">BigInteger</span> i = extractFromRequest(req);</span><br><span class="line">        <span class="type">BigInteger</span>[] factors = factor(i);</span><br><span class="line">        encodeIntoResponse(resp, factors);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
@@ -318,8 +334,7 @@
 <p>对执行时间较长的计算或无法快速完成的操作(网络I/O、控制台I/O) 一定不要持有锁</p>
 </blockquote>
 
-            
-          </span>
+          
         
       
     </div>
@@ -369,7 +384,10 @@
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2016-01-18T13:53:38+08:00" content="2016-01-18">
               2016-01-18
             </time>
@@ -390,21 +408,22 @@
 
           
 
+          
+          
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-              <p>因为域名是在NameCheap上，使用DNSPOD解析域名，自然需要做相应的配置，可是DNSPOD官方网站的文档也是旧版的，为了方便有需要的朋友，现在将新版的配置方法共享出来。<br>旧版地址：<a href="https://support.dnspod.cn/Kb/showarticle/?qtype=%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B&amp;tsid=47" title="NameCheap注册商域名修改DNS地址" target="_blank" rel="external">NameCheap注册商域名修改DNS地址</a></p>
+          
+            <p>因为域名是在NameCheap上，使用DNSPOD解析域名，自然需要做相应的配置，可是DNSPOD官方网站的文档也是旧版的，为了方便有需要的朋友，现在将新版的配置方法共享出来。<br>旧版地址：<a href="https://support.dnspod.cn/Kb/showarticle/?qtype=%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B&amp;tsid=47" title="NameCheap注册商域名修改DNS地址" target="_blank" rel="external">NameCheap注册商域名修改DNS地址</a></p>
 <ol>
 <li>登录<a href="http:www.namecheap.com" title="NameCheap" target="_blank" rel="external">NameCheap</a></li>
 <li>打开<a href="https://ap.www.namecheap.com/Domains/DomainOnly" title="域名管理列表" target="_blank" rel="external">域名管理列表</a><br><img src="http://7xp9un.com1.z0.glb.clouddn.com/blog/modifyDNS/screenshot1.png" alt="域名管理列表"></li>
@@ -414,8 +433,7 @@
 <li>设置完毕，等待全球递归DNS服务器刷新（最多72小时）。</li>
 </ol>
 
-            
-          </span>
+          
         
       
     </div>
@@ -465,7 +483,10 @@
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
             <time itemprop="dateCreated" datetime="2015-12-29T18:09:21+08:00" content="2015-12-29">
               2015-12-29
             </time>
@@ -486,21 +507,22 @@
 
           
 
+          
+          
         </div>
       </header>
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
         
-          <span itemprop="articleBody">
-            
-              <h1 id="java_u4E2D_u8FDB_u884Cdouble_u6570_u636E_u8BA1_u7B97_u7684_u65F6_u5019_u4F1A_u51FA_u73B0_u7CBE_u5EA6_u95EE_u9898_u3002"><a href="#java_u4E2D_u8FDB_u884Cdouble_u6570_u636E_u8BA1_u7B97_u7684_u65F6_u5019_u4F1A_u51FA_u73B0_u7CBE_u5EA6_u95EE_u9898_u3002" class="headerlink" title="java中进行double数据计算的时候会出现精度问题。"></a>java中进行double数据计算的时候会出现精度问题。</h1><h2 id="u95EE_u9898_u590D_u73B0_uFF1A"><a href="#u95EE_u9898_u590D_u73B0_uFF1A" class="headerlink" title="问题复现："></a>问题复现：</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> DoublePrecision &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Double add :"</span> + (<span class="number">1.01</span> + <span class="number">2.01</span>));</span><br><span class="line">        System.out.println(<span class="string">"Double sub :"</span> + (<span class="number">2.01</span> - <span class="number">1.02</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+            <h1 id="java_u4E2D_u8FDB_u884Cdouble_u6570_u636E_u8BA1_u7B97_u7684_u65F6_u5019_u4F1A_u51FA_u73B0_u7CBE_u5EA6_u95EE_u9898_u3002"><a href="#java_u4E2D_u8FDB_u884Cdouble_u6570_u636E_u8BA1_u7B97_u7684_u65F6_u5019_u4F1A_u51FA_u73B0_u7CBE_u5EA6_u95EE_u9898_u3002" class="headerlink" title="java中进行double数据计算的时候会出现精度问题。"></a>java中进行double数据计算的时候会出现精度问题。</h1><h2 id="u95EE_u9898_u590D_u73B0_uFF1A"><a href="#u95EE_u9898_u590D_u73B0_uFF1A" class="headerlink" title="问题复现："></a>问题复现：</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> DoublePrecision &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Double add :"</span> + (<span class="number">1.01</span> + <span class="number">2.01</span>));</span><br><span class="line">        System.out.println(<span class="string">"Double sub :"</span> + (<span class="number">2.01</span> - <span class="number">1.02</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>得到如下结果<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">Double</span> <span class="tag">add</span> <span class="pseudo">:3</span><span class="class">.0199999999999996</span></span><br><span class="line"><span class="tag">Double</span> <span class="tag">sub</span> <span class="pseudo">:0</span><span class="class">.9899999999999998</span></span><br></pre></td></tr></table></figure></p>
 <p>可以看到精度出现了问题。所以对于高精度的运算double是不适合的。<br>为什么会出现精度问题可以参考这篇博文<a href="http://blog.csdn.net/abing37/article/details/5332798" title="java float double精度为什么会丢失？浅谈java的浮点数精度问题" target="_blank" rel="external">java float double精度为什么会丢失？浅谈java的浮点数精度问题</a></p>
 <h2 id="u5982_u4F55_u89E3_u51B3_uFF1F"><a href="#u5982_u4F55_u89E3_u51B3_uFF1F" class="headerlink" title="如何解决？"></a>如何解决？</h2><p>使用BigDecimal类。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">import java.math.BigDecimal;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> DoublePrecision &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Double add :"</span> + (<span class="number">1.01</span> + <span class="number">2.01</span>));</span><br><span class="line">        System.out.println(<span class="string">"Double sub :"</span> + (<span class="number">2.01</span> - <span class="number">1.02</span>));</span><br><span class="line">        System.out.println(<span class="string">"BigDecimal add :"</span> + BigDecimalUtil.add(<span class="number">1.01</span>, <span class="number">2.01</span>));</span><br><span class="line">        System.out.println(<span class="string">"BigDecimal sub :"</span> + BigDecimalUtil.subtract(<span class="number">2.01</span>, <span class="number">1.02</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> BigDecimalUtil &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> BigDecimal <span class="title">add</span><span class="params">(<span class="keyword">double</span> num1, <span class="keyword">double</span> num2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BigDecimal.valueOf(num1).add(BigDecimal.valueOf(num2));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> BigDecimal <span class="title">subtract</span><span class="params">(<span class="keyword">double</span> num1, <span class="keyword">double</span> num2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> BigDecimal(Double.toString(num1)).subtract(<span class="keyword">new</span> BigDecimal(Double.toString(num2)));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -512,8 +534,7 @@
 <p>根据Java文档的介绍<code>BigDecimal.valueOf(double val)</code>与<code>new BigDecimal(Double.toString(double))</code>等价, 此处<code>add()</code>使用<code>BigDecimal.valueOf(double val)</code>,<code>subtract()</code> 使用了不同的方法<code>new BigDecimal(Double.toString(double))</code>。</p>
 <h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>对高精度运算使用BigDecimal,尽量避免使用double计算以免精度丢失。</p>
 
-            
-          </span>
+          
         
       
     </div>
@@ -538,17 +559,15 @@
   
 
 
+          </div>
+          
+
+
+          
+
         </div>
-
         
-
-
-        
-
-      </div>
-
-      
-        
+          
   
   <div class="sidebar-toggle">
     <div class="sidebar-toggle-line-wrap">
@@ -567,10 +586,12 @@
 
       <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" src="http://7xp9un.com1.z0.glb.clouddn.com/blog/avatar.jpg" alt="sth" itemprop="image"/>
+          <img class="site-author-image" itemprop="image"
+               src="http://7xp9un.com1.z0.glb.clouddn.com/blog/avatar.jpg"
+               alt="sth" />
           <p class="site-author-name" itemprop="name">sth</p>
+          <p class="site-description motion-element" itemprop="description"></p>
         </div>
-        <p class="site-description motion-element" itemprop="description"></p>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
@@ -603,6 +624,12 @@
 
         
         
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
 
         <div class="links-of-author motion-element">
           
@@ -616,7 +643,8 @@
   </aside>
 
 
-      
+        
+      </div>
     </main>
 
     <footer id="footer" class="footer">
@@ -638,7 +666,7 @@
 <div class="theme-info">
   主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT
+    NexT.Mist
   </a>
 </div>
 
@@ -650,13 +678,48 @@
     <div class="back-to-top"></div>
   </div>
 
+  
+
+
+  
+
+
+
   <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
 
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
   
   
 
   
-    
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
 
   
     
@@ -674,37 +737,21 @@
       || document.getElementsByTagName('body')[0]).appendChild(ds);
     })();
   </script>
-    
-     
 
-
+  
     
   
 
-  
-  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
-  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
 
 
-  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
-  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
-<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
 
-<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
-
-
-  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-
-  
-
-  <script type="text/javascript" src="/js/bootstrap.js"></script>
 
   
   
 
   
   
+
 
 </body>
 </html>
