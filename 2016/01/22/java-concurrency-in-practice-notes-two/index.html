@@ -1,0 +1,887 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JCIP,Java," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="BetterSTH" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="第三章 对象的共享可见性
+在没有同步的情况下，编译器、处理器以及运行时等都可能对操作的执行顺序进行一些意想不到的调整
+
+失效数据
+失效数据现象
+12345678910@NotThreadSafepublic class MutableInteger &amp;#123;    private int value;    public int get() &amp;#123;        return value">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发编程实战 笔记二">
+<meta property="og:url" content="http://bettersth.xyz/2016/01/22/java-concurrency-in-practice-notes-two/index.html">
+<meta property="og:site_name" content="BetterSTH">
+<meta property="og:description" content="第三章 对象的共享可见性
+在没有同步的情况下，编译器、处理器以及运行时等都可能对操作的执行顺序进行一些意想不到的调整
+
+失效数据
+失效数据现象
+12345678910@NotThreadSafepublic class MutableInteger &amp;#123;    private int value;    public int get() &amp;#123;        return value">
+<meta property="og:updated_time" content="2016-01-22T05:59:44.456Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java并发编程实战 笔记二">
+<meta name="twitter:description" content="第三章 对象的共享可见性
+在没有同步的情况下，编译器、处理器以及运行时等都可能对操作的执行顺序进行一些意想不到的调整
+
+失效数据
+失效数据现象
+12345678910@NotThreadSafepublic class MutableInteger &amp;#123;    private int value;    public int get() &amp;#123;        return value">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: "post",
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> Java并发编程实战 笔记二 | BetterSTH </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?d1eb7899798e600b673a7af153ac3f69";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+
+  <div class="container one-collumn  page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">BetterSTH</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'to8ChRfJZyanZLDn-5zq','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java并发编程实战 笔记二
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-01-22T13:59:44+08:00" content="2016-01-22">
+              2016-01-22
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/22/java-concurrency-in-practice-notes-two/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/22/java-concurrency-in-practice-notes-two/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="u7B2C_u4E09_u7AE0__u5BF9_u8C61_u7684_u5171_u4EAB"><a href="#u7B2C_u4E09_u7AE0__u5BF9_u8C61_u7684_u5171_u4EAB" class="headerlink" title="第三章 对象的共享"></a>第三章 对象的共享</h2><h3 id="u53EF_u89C1_u6027"><a href="#u53EF_u89C1_u6027" class="headerlink" title="可见性"></a>可见性</h3><blockquote>
+<p>在没有同步的情况下，编译器、处理器以及运行时等都可能对操作的执行顺序进行一些意想不到的调整</p>
+</blockquote>
+<h4 id="u5931_u6548_u6570_u636E"><a href="#u5931_u6548_u6570_u636E" class="headerlink" title="失效数据"></a>失效数据</h4><ol>
+<li><p>失效数据现象</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@NotThreadSafe</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MutableInteger</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> <span class="keyword">value</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">get</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span>(<span class="params"><span class="keyword">int</span> <span class="keyword">value</span></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.<span class="keyword">value</span> = <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>线程安全</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@ThreadSafe</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SynchronizedInteger</span> &#123;</span><br><span class="line">    @GuardedBy(<span class="string">"this"</span>) <span class="keyword">private</span> <span class="keyword">int</span> <span class="keyword">value</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> synchronized <span class="keyword">int</span> <span class="title">get</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> synchronized <span class="keyword">void</span> <span class="title">set</span>(<span class="params"><span class="keyword">int</span> <span class="keyword">value</span></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.<span class="keyword">value</span> = <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<a id="more"></a>
+<h4 id="u975E_u539F_u5B50_u768464_u4F4D_u64CD_u4F5C"><a href="#u975E_u539F_u5B50_u768464_u4F4D_u64CD_u4F5C" class="headerlink" title="非原子的64位操作"></a>非原子的64位操作</h4><ol>
+<li>最低安全性（out-of-thin-air safety）：当线程在没有同步的情况下读取变量时，可能会得到一个失效值，但至少在这个值是由之前某个线程设置的值，而不是一个随机值。这种安全性保证被称为最低安全性。</li>
+<li>低安全性适用于绝大多数变量，除了非volatile类型的64位数值变量（double和long）</li>
+<li>对于非volatile类型的double和long变量，JVM允许将64位的读操作或写操作分解为2个32位操作，需要用volatile声明或加锁，否则在多线程中不安全</li>
+</ol>
+<h4 id="u52A0_u9501_u4E0E_u53EF_u89C1_u6027"><a href="#u52A0_u9501_u4E0E_u53EF_u89C1_u6027" class="headerlink" title="加锁与可见性"></a>加锁与可见性</h4><blockquote>
+<p>加锁的含义不仅仅局限于互斥行为，还包括内存可见性，所有执行读操作或者写操作的线程都必须在同一个锁上同步</p>
+</blockquote>
+<h4 id="Volatile_u53D8_u91CF"><a href="#Volatile_u53D8_u91CF" class="headerlink" title="Volatile变量"></a>Volatile变量</h4><ul>
+<li>Java语言提供的一种稍弱的同步机制</li>
+<li>不会将该变量上的操作与其他内存操作重排序</li>
+<li>volatile变量不会被缓存在寄存器或者对其他处理器不可见的地方</li>
+<li>访问volatile变量时不会执行加锁操作，因此就不会使执行线程阻塞，因此volatile变量是一种比synchronized关键字更轻量级的同步机制</li>
+</ul>
+<p><strong> volatile变量的正确使用方式：</strong></p>
+<ol>
+<li>确保它们自身状态的可见性</li>
+<li>确保它们所引用对象的状态的可见性</li>
+<li>标识一些重要的程序生命周期事件的发生(例如初始化或关闭)</li>
+</ol>
+<blockquote>
+<p>加锁机制既可以确保可见性又可以确保原子性，而volatile变量只能确保可见性</p>
+</blockquote>
+<p><strong> 当且仅当满足以下所有条件时才应该使用volatile变量 </strong></p>
+<ol>
+<li>对变量的写入操作不依赖变量的当前值，或者你能确保只有单个线程更新变量的值</li>
+<li>该变量不会与其他状态变量一起纳入不变性条件中</li>
+<li>在访问变量时不需要加锁</li>
+</ol>
+<h3 id="u53D1_u5E03_u4E0E_u9038_u51FA"><a href="#u53D1_u5E03_u4E0E_u9038_u51FA" class="headerlink" title="发布与逸出"></a>发布与逸出</h3><p><strong> 概念 </strong></p>
+<ul>
+<li>发布一个对象指使对象能够在当前作用域之外的代码中使用</li>
+<li>当某个不应该发布的对象被发布时称为逸出</li>
+</ul>
+<p><strong>发布对象方法</strong></p>
+<ol>
+<li>将对象的引用保存到一个公有的静态变量中，以便任何类和线程都能看见该对象</li>
+<li><p>发布某个对象时，可能会间接发布其他对象。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> UnsafeStates &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">String</span>[] states = <span class="keyword">new</span> <span class="built_in">String</span>[]&#123;</span><br><span class="line">        <span class="string">"AK"</span>, <span class="string">"AL"</span> <span class="comment">/*...*/</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">String</span>[] getStates() &#123;</span><br><span class="line">        <span class="keyword">return</span> states;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>发布一个对象时，在该对象的非私有域中引用的所有对象同样会被发布</p>
+</li>
+<li>发布一个内部的类实例</li>
+</ol>
+<h4 id="u5B89_u5168_u7684_u5BF9_u8C61_u6784_u9020_u8FC7_u7A0B"><a href="#u5B89_u5168_u7684_u5BF9_u8C61_u6784_u9020_u8FC7_u7A0B" class="headerlink" title="安全的对象构造过程"></a>安全的对象构造过程</h4><blockquote>
+<p>要在构造过程中使this引用逸出,只有当构造函数返回时，this引用才应该从线程中逸出</p>
+</blockquote>
+<h3 id="u7EBF_u7A0B_u5C01_u95ED"><a href="#u7EBF_u7A0B_u5C01_u95ED" class="headerlink" title="线程封闭"></a>线程封闭</h3><ul>
+<li>如果仅在单线程内访问数据，就不需要同步，这种技术称为线程封闭（Thread Confinement）</li>
+<li>实现线程安全性的最简单方式之一</li>
+</ul>
+<h4 id="Ad-hoc_u7EBF_u7A0B_u5C01_u95ED_3A"><a href="#Ad-hoc_u7EBF_u7A0B_u5C01_u95ED_3A" class="headerlink" title="Ad-hoc线程封闭:"></a>Ad-hoc线程封闭:</h4><ol>
+<li>维护线程封闭性的职责完全由程序实现来承担</li>
+<li>Ad-hoc非常脆弱</li>
+<li>尽量少用</li>
+</ol>
+<h4 id="u6808_u5C01_u95ED"><a href="#u6808_u5C01_u95ED" class="headerlink" title="栈封闭"></a>栈封闭</h4><ol>
+<li>线程封闭的一种特例，只能通过局部变量才能访问对象</li>
+<li>比Ad-hoc线程封闭更易于维护，也更加健壮</li>
+<li>基本类型的局部变量始终封闭在线程内</li>
+<li>在线程内部上下文中使用非线程安全的对象，那么该对象仍然是线程安全的</li>
+</ol>
+<h4 id="ThreadLocal_u7C7B"><a href="#ThreadLocal_u7C7B" class="headerlink" title="ThreadLocal类"></a>ThreadLocal类</h4><ol>
+<li>维持线程封闭性的更规范方法是使用ThreadLocal，这个类能使线程中的某个值与保存值的对象关联起来</li>
+<li>常用于防止对可变的单实例变量或全局变量进行共享</li>
+<li>线程初次调用ThreadLocal.get方法时，就调用initialValue来获取初始值</li>
+<li>将一个单线程应用程序移植到多线程环境中，通过将共享的全局变量转化成ThreadLocal对象可以维持线程安全性</li>
+<li>ThreadLocal变量类型全局变量，会降低代码的可重用性，并在类之间引入隐含的偶含性</li>
+</ol>
+<h3 id="u4E0D_u53D8_u6027"><a href="#u4E0D_u53D8_u6027" class="headerlink" title="不变性"></a>不变性</h3><blockquote>
+<p>不可变对象一定是线程安全的</p>
+</blockquote>
+<p><strong> 满足以下条件时，对象才是不可变的：</strong></p>
+<ol>
+<li>对象创建以后其状态就不能修改</li>
+<li>对象的所有域都是final类型</li>
+<li>对象是正确创建的(在对象的创建期间，this引用没有逸出)</li>
+</ol>
+<h4 id="Final_u57DF"><a href="#Final_u57DF" class="headerlink" title="Final域"></a>Final域</h4><ul>
+<li>final域确保初始化过程的安全性</li>
+</ul>
+<h4 id="u793A_u4F8B_uFF1A_u4F7F_u7528volatile_u7C7B_u578B_u6765_u53D1_u5E03_u4E0D_u53EF_u53D8_u5BF9_u8C61"><a href="#u793A_u4F8B_uFF1A_u4F7F_u7528volatile_u7C7B_u578B_u6765_u53D1_u5E03_u4E0D_u53EF_u53D8_u5BF9_u8C61" class="headerlink" title="示例：使用volatile类型来发布不可变对象"></a>示例：使用volatile类型来发布不可变对象</h4><blockquote>
+<p>每当需要一堆相关数据以原子方式执行某个操作时，可以考虑创建一个不可变的类来包含这些数据</p>
+</blockquote>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"> <span class="annotation">@Immutable</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OneValueCache</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BigInteger lastNumber;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BigInteger[] lastFactors;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OneValueCache</span><span class="params">(BigInteger i,</span><br><span class="line">                         BigInteger[] factors)</span> </span>&#123;</span><br><span class="line">        lastNumber = i;</span><br><span class="line">        lastFactors = Arrays.copyOf(factors, factors.length);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> BigInteger[] getFactors(BigInteger i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (lastNumber == <span class="keyword">null</span> || !lastNumber.equals(i))</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> Arrays.copyOf(lastFactors, lastFactors.length);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="annotation">@ThreadSafe</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VolatileCachedFactorizer</span> <span class="keyword">extends</span> <span class="title">GenericServlet</span> <span class="keyword">implements</span> <span class="title">Servlet</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> OneValueCache cache = <span class="keyword">new</span> OneValueCache(<span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">(ServletRequest req, ServletResponse resp)</span> </span>&#123;</span><br><span class="line">        BigInteger i = extractFromRequest(req);</span><br><span class="line">        BigInteger[] factors = cache.getFactors(i);</span><br><span class="line">        <span class="keyword">if</span> (factors == <span class="keyword">null</span>) &#123;</span><br><span class="line">            factors = factor(i);</span><br><span class="line">            cache = <span class="keyword">new</span> OneValueCache(i, factors);</span><br><span class="line">        &#125;</span><br><span class="line">        encodeIntoResponse(resp, factors);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="u5B89_u5168_u53D1_u5E03"><a href="#u5B89_u5168_u53D1_u5E03" class="headerlink" title="安全发布"></a>安全发布</h3><h4 id="u4E0D_u6B63_u786E_u7684_u53D1_u5E03_uFF1A_u6B63_u786E_u7684_u5BF9_u8C61_u88AB_u7834_u574F"><a href="#u4E0D_u6B63_u786E_u7684_u53D1_u5E03_uFF1A_u6B63_u786E_u7684_u5BF9_u8C61_u88AB_u7834_u574F" class="headerlink" title="不正确的发布：正确的对象被破坏"></a>不正确的发布：正确的对象被破坏</h4><h4 id="u4E0D_u53EF_u53D8_u5BF9_u8C61_u4E0E_u521D_u59CB_u5316_u5B89_u5168_u6027"><a href="#u4E0D_u53EF_u53D8_u5BF9_u8C61_u4E0E_u521D_u59CB_u5316_u5B89_u5168_u6027" class="headerlink" title="不可变对象与初始化安全性"></a>不可变对象与初始化安全性</h4><blockquote>
+<p>任何线程都可以在不需要额外同步的情况下安全访问不可变对象，即使在发布这些对象时没有使用同步</p>
+</blockquote>
+<h4 id="u5B89_u5168_u53D1_u5E03_u7684_u5E38_u7528_u6A21_u5F0F"><a href="#u5B89_u5168_u53D1_u5E03_u7684_u5E38_u7528_u6A21_u5F0F" class="headerlink" title="安全发布的常用模式"></a>安全发布的常用模式</h4><p><strong> 如何安全的发布一个对象 </strong></p>
+<ul>
+<li>在静态初始化函数中初始化一个对象引用</li>
+<li>将对象的引用保存到volatile类型的域或者AtomicReferance对象中</li>
+<li>将对象的引用保存到某个正确构造对象的final类型域中</li>
+<li>将对象的引用保存到一个由锁包含的域中</li>
+</ul>
+<h4 id="u4E8B_u5B9E_u4E0D_u53EF_u53D8_u5BF9_u8C61"><a href="#u4E8B_u5B9E_u4E0D_u53EF_u53D8_u5BF9_u8C61" class="headerlink" title="事实不可变对象"></a>事实不可变对象</h4><p> 如果对象从技术上来看是可变的，但其状态在发布后不会再改吧，那么把这种对象称为“事实不可变对象”(Effectively Immutable Object)</p>
+<blockquote>
+<p>在没有额外的同步的情况下，任何线程都可以安全地使用被安全发布的事实不可变对象</p>
+</blockquote>
+<h4 id="u53EF_u53D8_u5BF9_u8C61"><a href="#u53EF_u53D8_u5BF9_u8C61" class="headerlink" title="可变对象"></a>可变对象</h4><p> 对象在构造后可以修改，安全发布只能确保“发布当时”状态的可见性</p>
+<blockquote>
+<p>对象的发布需求取决于它的可变性：</p>
+<ul>
+<li>不可变对象可以通过任意机制来发布</li>
+<li>事实不可变对象必须通过安全方式来发布</li>
+<li>可变对象必须通过安全方式来发布，并且必须是线程安全的或者由某个锁保护起来</li>
+</ul>
+</blockquote>
+<h4 id="u5B89_u5168_u7684_u5171_u4EAB_u5BF9_u8C61"><a href="#u5B89_u5168_u7684_u5171_u4EAB_u5BF9_u8C61" class="headerlink" title="安全的共享对象"></a>安全的共享对象</h4><p>在并发程序中使用和共享对象时，实用策略：<br><strong> 线程封闭 </strong> 线程封闭的对象只能由一个线程拥有，对象呗封闭在该线程中，并且只能由这个线程修改。<br><strong> 只读共享 </strong> 在没有额外同步的情况下，共享的只读对象可以由多个线程并发访问，但任何线程都不能访问它。共享的只读对象包括不可变对象和事实不可变对象。<br><strong> 线程安全共享 </strong> 线程安全的对象在其内部实现同步，因此多个线程可以通过对象的公有接口来进行访问而不需要进一步的同步。<br><strong> 保护对象 </strong> 被保护的对象只能通过持有特定的锁来访问。保护对象包括封装在内部线程安全对象中的对象，以及已发布的并且由某个特定锁保护的对象。</p>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JCIP/" rel="tag">#JCIP</a>
+          
+            <a href="/tags/Java/" rel="tag">#Java</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/01/19/generate-site-map/" rel="next" title="Hexo生成SiteMap">
+                <i class="fa fa-chevron-left"></i> Hexo生成SiteMap
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/01/22/java-concurrency-in-practice-notes-two/"
+           data-title="Java并发编程实战 笔记二" data-url="http://bettersth.xyz/2016/01/22/java-concurrency-in-practice-notes-two/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xp9un.com1.z0.glb.clouddn.com/blog/avatar.jpg"
+               alt="sth" />
+          <p class="site-author-name" itemprop="name">sth</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u7B2C_u4E09_u7AE0__u5BF9_u8C61_u7684_u5171_u4EAB"><span class="nav-number">1.</span> <span class="nav-text">第三章 对象的共享</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u53EF_u89C1_u6027"><span class="nav-number">1.1.</span> <span class="nav-text">可见性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u5931_u6548_u6570_u636E"><span class="nav-number">1.1.1.</span> <span class="nav-text">失效数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u975E_u539F_u5B50_u768464_u4F4D_u64CD_u4F5C"><span class="nav-number">1.1.2.</span> <span class="nav-text">非原子的64位操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u52A0_u9501_u4E0E_u53EF_u89C1_u6027"><span class="nav-number">1.1.3.</span> <span class="nav-text">加锁与可见性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Volatile_u53D8_u91CF"><span class="nav-number">1.1.4.</span> <span class="nav-text">Volatile变量</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u53D1_u5E03_u4E0E_u9038_u51FA"><span class="nav-number">1.2.</span> <span class="nav-text">发布与逸出</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u5B89_u5168_u7684_u5BF9_u8C61_u6784_u9020_u8FC7_u7A0B"><span class="nav-number">1.2.1.</span> <span class="nav-text">安全的对象构造过程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7EBF_u7A0B_u5C01_u95ED"><span class="nav-number">1.3.</span> <span class="nav-text">线程封闭</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Ad-hoc_u7EBF_u7A0B_u5C01_u95ED_3A"><span class="nav-number">1.3.1.</span> <span class="nav-text">Ad-hoc线程封闭:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u6808_u5C01_u95ED"><span class="nav-number">1.3.2.</span> <span class="nav-text">栈封闭</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ThreadLocal_u7C7B"><span class="nav-number">1.3.3.</span> <span class="nav-text">ThreadLocal类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4E0D_u53D8_u6027"><span class="nav-number">1.4.</span> <span class="nav-text">不变性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Final_u57DF"><span class="nav-number">1.4.1.</span> <span class="nav-text">Final域</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u793A_u4F8B_uFF1A_u4F7F_u7528volatile_u7C7B_u578B_u6765_u53D1_u5E03_u4E0D_u53EF_u53D8_u5BF9_u8C61"><span class="nav-number">1.4.2.</span> <span class="nav-text">示例：使用volatile类型来发布不可变对象</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5B89_u5168_u53D1_u5E03"><span class="nav-number">1.5.</span> <span class="nav-text">安全发布</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u4E0D_u6B63_u786E_u7684_u53D1_u5E03_uFF1A_u6B63_u786E_u7684_u5BF9_u8C61_u88AB_u7834_u574F"><span class="nav-number">1.5.1.</span> <span class="nav-text">不正确的发布：正确的对象被破坏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u4E0D_u53EF_u53D8_u5BF9_u8C61_u4E0E_u521D_u59CB_u5316_u5B89_u5168_u6027"><span class="nav-number">1.5.2.</span> <span class="nav-text">不可变对象与初始化安全性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u5B89_u5168_u53D1_u5E03_u7684_u5E38_u7528_u6A21_u5F0F"><span class="nav-number">1.5.3.</span> <span class="nav-text">安全发布的常用模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u4E8B_u5B9E_u4E0D_u53EF_u53D8_u5BF9_u8C61"><span class="nav-number">1.5.4.</span> <span class="nav-text">事实不可变对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u53EF_u53D8_u5BF9_u8C61"><span class="nav-number">1.5.5.</span> <span class="nav-text">可变对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u5B89_u5168_u7684_u5171_u4EAB_u5BF9_u8C61"><span class="nav-number">1.5.6.</span> <span class="nav-text">安全的共享对象</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sth</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"bettersth"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+
+  
+  
+
+
+</body>
+</html>

@@ -2,23 +2,33 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://bettersth.xyz/2016/01/19/generate-site-map/</loc>
-    <lastmod>2016-01-19T08:00:48.701Z</lastmod>
+    <loc>http://bettersth.xyz/2016/01/18/modify-NameCheap-DNS/</loc>
+    <lastmod>2016-01-22T06:05:59.609Z</lastmod>
   </url>
   
   <url>
-    <loc>http://bettersth.xyz/2016/01/18/java-concurrency-in-practice-notes-one/</loc>
-    <lastmod>2016-01-18T09:42:08.211Z</lastmod>
+    <loc>http://bettersth.xyz/2016/01/22/java-concurrency-in-practice-notes-two/</loc>
+    <lastmod>2016-01-22T05:59:44.456Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://bettersth.xyz/2016/01/19/generate-site-map/</loc>
+    <lastmod>2016-01-22T02:34:40.720Z</lastmod>
   </url>
   
   <url>
     <loc>http://bettersth.xyz/2015/12/29/java-double-precision/</loc>
-    <lastmod>2016-01-18T06:37:57.624Z</lastmod>
+    <lastmod>2016-01-22T02:29:13.540Z</lastmod>
   </url>
   
   <url>
-    <loc>http://bettersth.xyz/2016/01/18/modify-NameCheap-DNS/</loc>
-    <lastmod>2016-01-18T05:53:38.217Z</lastmod>
+    <loc>http://bettersth.xyz/2016/01/18/java-concurrency-in-practice-notes-one/</loc>
+    <lastmod>2016-01-22T02:28:55.500Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://bettersth.xyz/categories/index.html</loc>
+    <lastmod>2016-01-21T01:59:34.928Z</lastmod>
   </url>
   
   <url>

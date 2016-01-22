@@ -4,8 +4,45 @@
 
     
   <url>
+    <loc>http://bettersth.xyz/2016/01/18/modify-NameCheap-DNS/</loc>
+    <lastmod>2016-01-22T06:05:59.609Z</lastmod>
+    <data>
+        <display>
+        <title>NameCheap注册商域名修改DNS地址（新版）</title>
+        <pubTime>2016-01-18T05:53:38.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bettersth.xyz/2016/01/22/java-concurrency-in-practice-notes-two/</loc>
+    <lastmod>2016-01-22T05:59:44.456Z</lastmod>
+    <data>
+        <display>
+        <title>Java并发编程实战 笔记二</title>
+        <pubTime>2016-01-22T05:59:44.000Z</pubTime>
+        
+        <tag>JCIP</tag>
+         
+        <tag>Java</tag>
+         
+         
+           
+             
+              <breadCrumb title="读书笔记" url="http://bettersth.xyz/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://bettersth.xyz/2016/01/19/generate-site-map/</loc>
-    <lastmod>2016-01-19T08:00:48.701Z</lastmod>
+    <lastmod>2016-01-22T02:34:40.720Z</lastmod>
     <data>
         <display>
         <title>Hexo生成SiteMap</title>
@@ -21,27 +58,8 @@
 
     
   <url>
-    <loc>http://bettersth.xyz/2016/01/18/java-concurrency-in-practice-notes-one/</loc>
-    <lastmod>2016-01-18T09:42:08.211Z</lastmod>
-    <data>
-        <display>
-        <title>Java并发编程实战 笔记一</title>
-        <pubTime>2016-01-18T09:38:27.000Z</pubTime>
-        
-        <tag>JCIP</tag>
-         
-        <tag>Java</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://bettersth.xyz/2015/12/29/java-double-precision/</loc>
-    <lastmod>2016-01-18T06:37:57.624Z</lastmod>
+    <lastmod>2016-01-22T02:29:13.540Z</lastmod>
     <data>
         <display>
         <title>Java double计算精度问题</title>
@@ -57,19 +75,27 @@
 
     
   <url>
-    <loc>http://bettersth.xyz/2016/01/18/modify-NameCheap-DNS/</loc>
-    <lastmod>2016-01-18T05:53:38.217Z</lastmod>
+    <loc>http://bettersth.xyz/2016/01/18/java-concurrency-in-practice-notes-one/</loc>
+    <lastmod>2016-01-22T02:28:55.500Z</lastmod>
     <data>
         <display>
-        <title>NameCheap注册商域名修改DNS地址（新版）</title>
-        <pubTime>2016-01-18T05:53:38.000Z</pubTime>
+        <title>Java并发编程实战 笔记一</title>
+        <pubTime>2016-01-18T09:38:27.000Z</pubTime>
         
+        <tag>JCIP</tag>
+         
+        <tag>Java</tag>
+         
          
            
+             
+              <breadCrumb title="读书笔记" url="http://bettersth.xyz/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+          
         </display>
     </data>
     </url>
 
+    
     
     
     

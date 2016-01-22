@@ -71,7 +71,7 @@ Sitemap 可方便网站管理员通知搜索引擎他们网站上有哪些可供
 Sitemap 可方便网站管理员通知搜索引擎他们网站上有哪些可供抓取的网页。最简单的 Sitemap 形式，就是XML 文件，在其中列出网站中的网址以及关于每个网址的其他元数据（上次更新的时间、更改的频率以及相对于网站上其他网址的重要程度为何等），以便搜索引擎">
 <meta property="og:image" content="http://7xp9un.com1.z0.glb.clouddn.com/blog/generateSiteMap/generateSiteMap.png">
 <meta property="og:image" content="http://7xp9un.com1.z0.glb.clouddn.com/blog/generateSiteMap/generateSiteMapXML.png">
-<meta property="og:updated_time" content="2016-01-19T08:00:48.701Z">
+<meta property="og:updated_time" content="2016-01-22T02:34:40.720Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo生成SiteMap">
 <meta name="twitter:description" content="今天准备配置个swiftype做个站内搜索，当搜索引擎新建成功后提示我没有找到相应的Sitemaps(站点地图)。
@@ -84,7 +84,7 @@ Sitemap 可方便网站管理员通知搜索引擎他们网站上有哪些可供
   var NexT = window.NexT || {};
   var CONFIG = {
     scheme: 'Mist',
-    sidebar: {"position":"left","display":"post"},
+    sidebar: "post",
     fancybox: true,
     motion: true,
     duoshuo: {
@@ -120,10 +120,8 @@ Sitemap 可方便网站管理员通知搜索引擎他们网站上有哪些可供
 
   
   
-    
-  
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn  page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -161,6 +159,16 @@ Sitemap 可方便网站管理员通知搜索引擎他们网站上有哪些可供
               <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
             
             首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
           </a>
         </li>
       
@@ -293,7 +301,8 @@ Sitemap 可方便网站管理员通知搜索引擎他们网站上有哪些可供
 <p>Sitemap 可方便网站管理员通知搜索引擎他们网站上有哪些可供抓取的网页。最简单的 Sitemap 形式，就是XML 文件，在其中列出网站中的网址以及关于每个网址的其他元数据（上次更新的时间、更改的频率以及相对于网站上其他网址的重要程度为何等），以便搜索引擎可以更加智能地抓取网站。</p>
 </blockquote>
 <p>Swiftype能自动抓取Sitemap对其建立索引，然后实现站内搜索。</p>
-<h1 id="u5982_u4F55_u5728hexo_u4E2D_u751F_u6210Sitemap_uFF1F"><a href="#u5982_u4F55_u5728hexo_u4E2D_u751F_u6210Sitemap_uFF1F" class="headerlink" title="如何在hexo中生成Sitemap？"></a>如何在hexo中生成Sitemap？</h1><ol>
+<h1 id="u5982_u4F55_u5728hexo_u4E2D_u751F_u6210Sitemap_uFF1F"><a href="#u5982_u4F55_u5728hexo_u4E2D_u751F_u6210Sitemap_uFF1F" class="headerlink" title="如何在hexo中生成Sitemap？"></a>如何在hexo中生成Sitemap？</h1><a id="more"></a>
+<ol>
 <li><p>安装hexo-generator-sitemap插件</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="operator"><span class="keyword">install</span> hexo-generator-sitemap <span class="comment">--save</span></span></span><br></pre></td></tr></table></figure>
 <p> 安装成功如下图所示：<br> <img src="http://7xp9un.com1.z0.glb.clouddn.com/blog/generateSiteMap/generateSiteMap.png" alt="Generate Sitemap"></p>
@@ -330,6 +339,10 @@ Sitemap 可方便网站管理员通知搜索引擎他们网站上有哪些可供
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/01/22/java-concurrency-in-practice-notes-two/" rel="prev" title="Java并发编程实战 笔记二">
+                Java并发编程实战 笔记二 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -401,16 +414,16 @@ Sitemap 可方便网站管理员通知搜索引擎他们网站上有哪些可供
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-count">5</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
-            
-              <span class="site-state-item-count">0</span>
+            <a href="/categories">
+              <span class="site-state-item-count">1</span>
               <span class="site-state-item-name">分类</span>
-              
+              </a>
           </div>
 
           <div class="site-state-item site-state-tags">

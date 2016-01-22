@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://bettersth.xyz/"/>
-  <updated>2016-01-19T08:00:48.701Z</updated>
+  <updated>2016-01-22T05:59:44.456Z</updated>
   <id>http://bettersth.xyz/</id>
   
   <author>
@@ -15,17 +15,169 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[Java并发编程实战 笔记二]]></title>
+    <link href="http://bettersth.xyz/2016/01/22/java-concurrency-in-practice-notes-two/"/>
+    <id>http://bettersth.xyz/2016/01/22/java-concurrency-in-practice-notes-two/</id>
+    <published>2016-01-22T05:59:44.000Z</published>
+    <updated>2016-01-22T05:59:44.456Z</updated>
+    <content type="html"><![CDATA[<h2 id="u7B2C_u4E09_u7AE0__u5BF9_u8C61_u7684_u5171_u4EAB"><a href="#u7B2C_u4E09_u7AE0__u5BF9_u8C61_u7684_u5171_u4EAB" class="headerlink" title="第三章 对象的共享"></a>第三章 对象的共享</h2><h3 id="u53EF_u89C1_u6027"><a href="#u53EF_u89C1_u6027" class="headerlink" title="可见性"></a>可见性</h3><blockquote>
+<p>在没有同步的情况下，编译器、处理器以及运行时等都可能对操作的执行顺序进行一些意想不到的调整</p>
+</blockquote>
+<h4 id="u5931_u6548_u6570_u636E"><a href="#u5931_u6548_u6570_u636E" class="headerlink" title="失效数据"></a>失效数据</h4><ol>
+<li><p>失效数据现象</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@NotThreadSafe</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MutableInteger</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> <span class="keyword">value</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">get</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span>(<span class="params"><span class="keyword">int</span> <span class="keyword">value</span></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.<span class="keyword">value</span> = <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>线程安全</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@ThreadSafe</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SynchronizedInteger</span> &#123;</span><br><span class="line">    @GuardedBy(<span class="string">"this"</span>) <span class="keyword">private</span> <span class="keyword">int</span> <span class="keyword">value</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> synchronized <span class="keyword">int</span> <span class="title">get</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> synchronized <span class="keyword">void</span> <span class="title">set</span>(<span class="params"><span class="keyword">int</span> <span class="keyword">value</span></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.<span class="keyword">value</span> = <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<a id="more"></a>
+<h4 id="u975E_u539F_u5B50_u768464_u4F4D_u64CD_u4F5C"><a href="#u975E_u539F_u5B50_u768464_u4F4D_u64CD_u4F5C" class="headerlink" title="非原子的64位操作"></a>非原子的64位操作</h4><ol>
+<li>最低安全性（out-of-thin-air safety）：当线程在没有同步的情况下读取变量时，可能会得到一个失效值，但至少在这个值是由之前某个线程设置的值，而不是一个随机值。这种安全性保证被称为最低安全性。</li>
+<li>低安全性适用于绝大多数变量，除了非volatile类型的64位数值变量（double和long）</li>
+<li>对于非volatile类型的double和long变量，JVM允许将64位的读操作或写操作分解为2个32位操作，需要用volatile声明或加锁，否则在多线程中不安全</li>
+</ol>
+<h4 id="u52A0_u9501_u4E0E_u53EF_u89C1_u6027"><a href="#u52A0_u9501_u4E0E_u53EF_u89C1_u6027" class="headerlink" title="加锁与可见性"></a>加锁与可见性</h4><blockquote>
+<p>加锁的含义不仅仅局限于互斥行为，还包括内存可见性，所有执行读操作或者写操作的线程都必须在同一个锁上同步</p>
+</blockquote>
+<h4 id="Volatile_u53D8_u91CF"><a href="#Volatile_u53D8_u91CF" class="headerlink" title="Volatile变量"></a>Volatile变量</h4><ul>
+<li>Java语言提供的一种稍弱的同步机制</li>
+<li>不会将该变量上的操作与其他内存操作重排序</li>
+<li>volatile变量不会被缓存在寄存器或者对其他处理器不可见的地方</li>
+<li>访问volatile变量时不会执行加锁操作，因此就不会使执行线程阻塞，因此volatile变量是一种比synchronized关键字更轻量级的同步机制</li>
+</ul>
+<p><strong> volatile变量的正确使用方式：</strong></p>
+<ol>
+<li>确保它们自身状态的可见性</li>
+<li>确保它们所引用对象的状态的可见性</li>
+<li>标识一些重要的程序生命周期事件的发生(例如初始化或关闭)</li>
+</ol>
+<blockquote>
+<p>加锁机制既可以确保可见性又可以确保原子性，而volatile变量只能确保可见性</p>
+</blockquote>
+<p><strong> 当且仅当满足以下所有条件时才应该使用volatile变量 </strong></p>
+<ol>
+<li>对变量的写入操作不依赖变量的当前值，或者你能确保只有单个线程更新变量的值</li>
+<li>该变量不会与其他状态变量一起纳入不变性条件中</li>
+<li>在访问变量时不需要加锁</li>
+</ol>
+<h3 id="u53D1_u5E03_u4E0E_u9038_u51FA"><a href="#u53D1_u5E03_u4E0E_u9038_u51FA" class="headerlink" title="发布与逸出"></a>发布与逸出</h3><p><strong> 概念 </strong></p>
+<ul>
+<li>发布一个对象指使对象能够在当前作用域之外的代码中使用</li>
+<li>当某个不应该发布的对象被发布时称为逸出</li>
+</ul>
+<p><strong>发布对象方法</strong></p>
+<ol>
+<li>将对象的引用保存到一个公有的静态变量中，以便任何类和线程都能看见该对象</li>
+<li><p>发布某个对象时，可能会间接发布其他对象。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> UnsafeStates &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">String</span>[] states = <span class="keyword">new</span> <span class="built_in">String</span>[]&#123;</span><br><span class="line">        <span class="string">"AK"</span>, <span class="string">"AL"</span> <span class="comment">/*...*/</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">String</span>[] getStates() &#123;</span><br><span class="line">        <span class="keyword">return</span> states;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>发布一个对象时，在该对象的非私有域中引用的所有对象同样会被发布</p>
+</li>
+<li>发布一个内部的类实例</li>
+</ol>
+<h4 id="u5B89_u5168_u7684_u5BF9_u8C61_u6784_u9020_u8FC7_u7A0B"><a href="#u5B89_u5168_u7684_u5BF9_u8C61_u6784_u9020_u8FC7_u7A0B" class="headerlink" title="安全的对象构造过程"></a>安全的对象构造过程</h4><blockquote>
+<p>要在构造过程中使this引用逸出,只有当构造函数返回时，this引用才应该从线程中逸出</p>
+</blockquote>
+<h3 id="u7EBF_u7A0B_u5C01_u95ED"><a href="#u7EBF_u7A0B_u5C01_u95ED" class="headerlink" title="线程封闭"></a>线程封闭</h3><ul>
+<li>如果仅在单线程内访问数据，就不需要同步，这种技术称为线程封闭（Thread Confinement）</li>
+<li>实现线程安全性的最简单方式之一</li>
+</ul>
+<h4 id="Ad-hoc_u7EBF_u7A0B_u5C01_u95ED_3A"><a href="#Ad-hoc_u7EBF_u7A0B_u5C01_u95ED_3A" class="headerlink" title="Ad-hoc线程封闭:"></a>Ad-hoc线程封闭:</h4><ol>
+<li>维护线程封闭性的职责完全由程序实现来承担</li>
+<li>Ad-hoc非常脆弱</li>
+<li>尽量少用</li>
+</ol>
+<h4 id="u6808_u5C01_u95ED"><a href="#u6808_u5C01_u95ED" class="headerlink" title="栈封闭"></a>栈封闭</h4><ol>
+<li>线程封闭的一种特例，只能通过局部变量才能访问对象</li>
+<li>比Ad-hoc线程封闭更易于维护，也更加健壮</li>
+<li>基本类型的局部变量始终封闭在线程内</li>
+<li>在线程内部上下文中使用非线程安全的对象，那么该对象仍然是线程安全的</li>
+</ol>
+<h4 id="ThreadLocal_u7C7B"><a href="#ThreadLocal_u7C7B" class="headerlink" title="ThreadLocal类"></a>ThreadLocal类</h4><ol>
+<li>维持线程封闭性的更规范方法是使用ThreadLocal，这个类能使线程中的某个值与保存值的对象关联起来</li>
+<li>常用于防止对可变的单实例变量或全局变量进行共享</li>
+<li>线程初次调用ThreadLocal.get方法时，就调用initialValue来获取初始值</li>
+<li>将一个单线程应用程序移植到多线程环境中，通过将共享的全局变量转化成ThreadLocal对象可以维持线程安全性</li>
+<li>ThreadLocal变量类型全局变量，会降低代码的可重用性，并在类之间引入隐含的偶含性</li>
+</ol>
+<h3 id="u4E0D_u53D8_u6027"><a href="#u4E0D_u53D8_u6027" class="headerlink" title="不变性"></a>不变性</h3><blockquote>
+<p>不可变对象一定是线程安全的</p>
+</blockquote>
+<p><strong> 满足以下条件时，对象才是不可变的：</strong></p>
+<ol>
+<li>对象创建以后其状态就不能修改</li>
+<li>对象的所有域都是final类型</li>
+<li>对象是正确创建的(在对象的创建期间，this引用没有逸出)</li>
+</ol>
+<h4 id="Final_u57DF"><a href="#Final_u57DF" class="headerlink" title="Final域"></a>Final域</h4><ul>
+<li>final域确保初始化过程的安全性</li>
+</ul>
+<h4 id="u793A_u4F8B_uFF1A_u4F7F_u7528volatile_u7C7B_u578B_u6765_u53D1_u5E03_u4E0D_u53EF_u53D8_u5BF9_u8C61"><a href="#u793A_u4F8B_uFF1A_u4F7F_u7528volatile_u7C7B_u578B_u6765_u53D1_u5E03_u4E0D_u53EF_u53D8_u5BF9_u8C61" class="headerlink" title="示例：使用volatile类型来发布不可变对象"></a>示例：使用volatile类型来发布不可变对象</h4><blockquote>
+<p>每当需要一堆相关数据以原子方式执行某个操作时，可以考虑创建一个不可变的类来包含这些数据</p>
+</blockquote>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"> <span class="annotation">@Immutable</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OneValueCache</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BigInteger lastNumber;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BigInteger[] lastFactors;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OneValueCache</span><span class="params">(BigInteger i,</span><br><span class="line">                         BigInteger[] factors)</span> </span>&#123;</span><br><span class="line">        lastNumber = i;</span><br><span class="line">        lastFactors = Arrays.copyOf(factors, factors.length);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> BigInteger[] getFactors(BigInteger i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (lastNumber == <span class="keyword">null</span> || !lastNumber.equals(i))</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> Arrays.copyOf(lastFactors, lastFactors.length);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="annotation">@ThreadSafe</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VolatileCachedFactorizer</span> <span class="keyword">extends</span> <span class="title">GenericServlet</span> <span class="keyword">implements</span> <span class="title">Servlet</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> OneValueCache cache = <span class="keyword">new</span> OneValueCache(<span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">(ServletRequest req, ServletResponse resp)</span> </span>&#123;</span><br><span class="line">        BigInteger i = extractFromRequest(req);</span><br><span class="line">        BigInteger[] factors = cache.getFactors(i);</span><br><span class="line">        <span class="keyword">if</span> (factors == <span class="keyword">null</span>) &#123;</span><br><span class="line">            factors = factor(i);</span><br><span class="line">            cache = <span class="keyword">new</span> OneValueCache(i, factors);</span><br><span class="line">        &#125;</span><br><span class="line">        encodeIntoResponse(resp, factors);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="u5B89_u5168_u53D1_u5E03"><a href="#u5B89_u5168_u53D1_u5E03" class="headerlink" title="安全发布"></a>安全发布</h3><h4 id="u4E0D_u6B63_u786E_u7684_u53D1_u5E03_uFF1A_u6B63_u786E_u7684_u5BF9_u8C61_u88AB_u7834_u574F"><a href="#u4E0D_u6B63_u786E_u7684_u53D1_u5E03_uFF1A_u6B63_u786E_u7684_u5BF9_u8C61_u88AB_u7834_u574F" class="headerlink" title="不正确的发布：正确的对象被破坏"></a>不正确的发布：正确的对象被破坏</h4><h4 id="u4E0D_u53EF_u53D8_u5BF9_u8C61_u4E0E_u521D_u59CB_u5316_u5B89_u5168_u6027"><a href="#u4E0D_u53EF_u53D8_u5BF9_u8C61_u4E0E_u521D_u59CB_u5316_u5B89_u5168_u6027" class="headerlink" title="不可变对象与初始化安全性"></a>不可变对象与初始化安全性</h4><blockquote>
+<p>任何线程都可以在不需要额外同步的情况下安全访问不可变对象，即使在发布这些对象时没有使用同步</p>
+</blockquote>
+<h4 id="u5B89_u5168_u53D1_u5E03_u7684_u5E38_u7528_u6A21_u5F0F"><a href="#u5B89_u5168_u53D1_u5E03_u7684_u5E38_u7528_u6A21_u5F0F" class="headerlink" title="安全发布的常用模式"></a>安全发布的常用模式</h4><p><strong> 如何安全的发布一个对象 </strong></p>
+<ul>
+<li>在静态初始化函数中初始化一个对象引用</li>
+<li>将对象的引用保存到volatile类型的域或者AtomicReferance对象中</li>
+<li>将对象的引用保存到某个正确构造对象的final类型域中</li>
+<li>将对象的引用保存到一个由锁包含的域中</li>
+</ul>
+<h4 id="u4E8B_u5B9E_u4E0D_u53EF_u53D8_u5BF9_u8C61"><a href="#u4E8B_u5B9E_u4E0D_u53EF_u53D8_u5BF9_u8C61" class="headerlink" title="事实不可变对象"></a>事实不可变对象</h4><p> 如果对象从技术上来看是可变的，但其状态在发布后不会再改吧，那么把这种对象称为“事实不可变对象”(Effectively Immutable Object)</p>
+<blockquote>
+<p>在没有额外的同步的情况下，任何线程都可以安全地使用被安全发布的事实不可变对象</p>
+</blockquote>
+<h4 id="u53EF_u53D8_u5BF9_u8C61"><a href="#u53EF_u53D8_u5BF9_u8C61" class="headerlink" title="可变对象"></a>可变对象</h4><p> 对象在构造后可以修改，安全发布只能确保“发布当时”状态的可见性</p>
+<blockquote>
+<p>对象的发布需求取决于它的可变性：</p>
+<ul>
+<li>不可变对象可以通过任意机制来发布</li>
+<li>事实不可变对象必须通过安全方式来发布</li>
+<li>可变对象必须通过安全方式来发布，并且必须是线程安全的或者由某个锁保护起来</li>
+</ul>
+</blockquote>
+<h4 id="u5B89_u5168_u7684_u5171_u4EAB_u5BF9_u8C61"><a href="#u5B89_u5168_u7684_u5171_u4EAB_u5BF9_u8C61" class="headerlink" title="安全的共享对象"></a>安全的共享对象</h4><p>在并发程序中使用和共享对象时，实用策略：<br><strong> 线程封闭 </strong> 线程封闭的对象只能由一个线程拥有，对象呗封闭在该线程中，并且只能由这个线程修改。<br><strong> 只读共享 </strong> 在没有额外同步的情况下，共享的只读对象可以由多个线程并发访问，但任何线程都不能访问它。共享的只读对象包括不可变对象和事实不可变对象。<br><strong> 线程安全共享 </strong> 线程安全的对象在其内部实现同步，因此多个线程可以通过对象的公有接口来进行访问而不需要进一步的同步。<br><strong> 保护对象 </strong> 被保护的对象只能通过持有特定的锁来访问。保护对象包括封装在内部线程安全对象中的对象，以及已发布的并且由某个特定锁保护的对象。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="u7B2C_u4E09_u7AE0__u5BF9_u8C61_u7684_u5171_u4EAB"><a href="#u7B2C_u4E09_u7AE0__u5BF9_u8C61_u7684_u5171_u4EAB" class="headerlink" title="第三章 对象的共享"></a>第三章 对象的共享</h2><h3 id="u53EF_u89C1_u6027"><a href="#u53EF_u89C1_u6027" class="headerlink" title="可见性"></a>可见性</h3><blockquote>
+<p>在没有同步的情况下，编译器、处理器以及运行时等都可能对操作的执行顺序进行一些意想不到的调整</p>
+</blockquote>
+<h4 id="u5931_u6548_u6570_u636E"><a href="#u5931_u6548_u6570_u636E" class="headerlink" title="失效数据"></a>失效数据</h4><ol>
+<li><p>失效数据现象</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@NotThreadSafe</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MutableInteger</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> <span class="keyword">value</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">get</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span>(<span class="params"><span class="keyword">int</span> <span class="keyword">value</span></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.<span class="keyword">value</span> = <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>线程安全</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@ThreadSafe</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SynchronizedInteger</span> &#123;</span><br><span class="line">    @GuardedBy(<span class="string">"this"</span>) <span class="keyword">private</span> <span class="keyword">int</span> <span class="keyword">value</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> synchronized <span class="keyword">int</span> <span class="title">get</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> synchronized <span class="keyword">void</span> <span class="title">set</span>(<span class="params"><span class="keyword">int</span> <span class="keyword">value</span></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.<span class="keyword">value</span> = <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>]]>
+    
+    </summary>
+    
+      <category term="JCIP" scheme="http://bettersth.xyz/tags/JCIP/"/>
+    
+      <category term="Java" scheme="http://bettersth.xyz/tags/Java/"/>
+    
+      <category term="读书笔记" scheme="http://bettersth.xyz/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[Hexo生成SiteMap]]></title>
     <link href="http://bettersth.xyz/2016/01/19/generate-site-map/"/>
     <id>http://bettersth.xyz/2016/01/19/generate-site-map/</id>
     <published>2016-01-19T07:16:17.000Z</published>
-    <updated>2016-01-19T08:00:48.701Z</updated>
+    <updated>2016-01-22T02:34:40.720Z</updated>
     <content type="html"><![CDATA[<p>今天准备配置个swiftype做个站内搜索，当搜索引擎新建成功后提示我没有找到相应的Sitemaps(站点地图)。</p>
 <h1 id="u4EC0_u4E48_u662FSitemap_uFF1F"><a href="#u4EC0_u4E48_u662FSitemap_uFF1F" class="headerlink" title="什么是Sitemap？"></a>什么是Sitemap？</h1><blockquote>
 <p>Sitemap 可方便网站管理员通知搜索引擎他们网站上有哪些可供抓取的网页。最简单的 Sitemap 形式，就是XML 文件，在其中列出网站中的网址以及关于每个网址的其他元数据（上次更新的时间、更改的频率以及相对于网站上其他网址的重要程度为何等），以便搜索引擎可以更加智能地抓取网站。</p>
 </blockquote>
 <p>Swiftype能自动抓取Sitemap对其建立索引，然后实现站内搜索。</p>
-<h1 id="u5982_u4F55_u5728hexo_u4E2D_u751F_u6210Sitemap_uFF1F"><a href="#u5982_u4F55_u5728hexo_u4E2D_u751F_u6210Sitemap_uFF1F" class="headerlink" title="如何在hexo中生成Sitemap？"></a>如何在hexo中生成Sitemap？</h1><ol>
+<h1 id="u5982_u4F55_u5728hexo_u4E2D_u751F_u6210Sitemap_uFF1F"><a href="#u5982_u4F55_u5728hexo_u4E2D_u751F_u6210Sitemap_uFF1F" class="headerlink" title="如何在hexo中生成Sitemap？"></a>如何在hexo中生成Sitemap？</h1><a id="more"></a>
+<ol>
 <li><p>安装hexo-generator-sitemap插件</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="operator"><span class="keyword">install</span> hexo-generator-sitemap <span class="comment">--save</span></span></span><br></pre></td></tr></table></figure>
 <p> 安装成功如下图所示：<br> <img src="http://7xp9un.com1.z0.glb.clouddn.com/blog/generateSiteMap/generateSiteMap.png" alt="Generate Sitemap"></p>
@@ -41,7 +193,12 @@
 ]]></content>
     <summary type="html">
     <![CDATA[<p>今天准备配置个swiftype做个站内搜索，当搜索引擎新建成功后提示我没有找到相应的Sitemaps(站点地图)。</p>
-<h1 id="u4EC0_u4E48_u662FSitemap_uFF1F"><a href="#u4EC0_u4E48_u662FSitemap_]]>
+<h1 id="u4EC0_u4E48_u662FSitemap_uFF1F"><a href="#u4EC0_u4E48_u662FSitemap_uFF1F" class="headerlink" title="什么是Sitemap？"></a>什么是Sitemap？</h1><blockquote>
+<p>Sitemap 可方便网站管理员通知搜索引擎他们网站上有哪些可供抓取的网页。最简单的 Sitemap 形式，就是XML 文件，在其中列出网站中的网址以及关于每个网址的其他元数据（上次更新的时间、更改的频率以及相对于网站上其他网址的重要程度为何等），以便搜索引擎可以更加智能地抓取网站。</p>
+</blockquote>
+<p>Swiftype能自动抓取Sitemap对其建立索引，然后实现站内搜索。</p>
+<h1 id="u5982_u4F55_u5728hexo_u4E2D_u751F_u6210Sitemap_uFF1F"><a href="#u5982_u4F55_u5728hexo_u4E2D_u751F_u6210Sitemap_uFF1F" class="headerlink" title="如何在hexo中生成Sitemap？"></a>如何在hexo中生成Sitemap？</h1>]]>
+    
     </summary>
     
       <category term="Hexo" scheme="http://bettersth.xyz/tags/Hexo/"/>
@@ -53,7 +210,7 @@
     <link href="http://bettersth.xyz/2016/01/18/java-concurrency-in-practice-notes-one/"/>
     <id>http://bettersth.xyz/2016/01/18/java-concurrency-in-practice-notes-one/</id>
     <published>2016-01-18T09:38:27.000Z</published>
-    <updated>2016-01-18T09:42:08.211Z</updated>
+    <updated>2016-01-22T02:28:55.500Z</updated>
     <content type="html"><![CDATA[<h2 id="u7B2C_u4E8C_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027"><a href="#u7B2C_u4E8C_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027" class="headerlink" title="第二章 线程安全性"></a>第二章 线程安全性</h2><h3 id="u7EBF_u7A0B_u5B89_u5168_u6027"><a href="#u7EBF_u7A0B_u5B89_u5168_u6027" class="headerlink" title="线程安全性"></a>线程安全性</h3><ol>
 <li>当多个线程访问某个类时,这个类始终都能表现出正确的行为</li>
 <li>无状态对象一定是线程安全的<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@ThreadSafe</span></span><br><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">StatelessFactorizer</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">GenericServlet</span> <span class="title">implements</span> <span class="title">Servlet</span> &#123;</span></span><br><span class="line">    public void service(<span class="type">ServletRequest</span> req, <span class="type">ServletResponse</span> resp) &#123;</span><br><span class="line">        <span class="type">BigInteger</span> i = extractFromRequest(req);</span><br><span class="line">        <span class="type">BigInteger</span>[] factors = factor(i);</span><br><span class="line">        encodeIntoResponse(resp, factors);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -65,14 +222,17 @@
 <p>当某个计算的正确性取决于多个线程的交替执行时序时，那么就会发生竞态条件</p>
 </blockquote>
 <ul>
-<li><p><strong>先检查后执行（Check-Then-Act）</strong><br>延迟性初始化</p>
-<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@NotThreadSafe<span class="keyword"></span><br><span class="line">public</span> class LazyInitRace &#123;</span><br><span class="line">   <span class="keyword"> private</span> ExpensiveObject<span class="instruction"> instance </span>= null;</span><br><span class="line">   <span class="keyword"> public</span> ExpensiveObject<span class="function"> getInstance(</span><span class="function">)</span> &#123;</span><br><span class="line">       <span class="instruction"> if </span>(instance == null<span class="function">)</span></span><br><span class="line">           <span class="instruction"> instance </span>=<span class="instruction"> new </span>ExpensiveObject(<span class="function">)</span>;</span><br><span class="line">       <span class="instruction"> return </span>instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>读取-修改-写入</strong><br>递增运算</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@NotThreadSafe</span></span><br><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">UnsafeCountingFactorizer</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">GenericServlet</span> <span class="title">implements</span> <span class="title">Servlet</span> &#123;</span></span><br><span class="line">    <span class="keyword">private</span> long count = <span class="number">0</span>;</span><br><span class="line">    public void service(<span class="type">ServletRequest</span> req, <span class="type">ServletResponse</span> resp) &#123;</span><br><span class="line">        <span class="type">BigInteger</span> i = extractFromRequest(req);</span><br><span class="line">        <span class="type">BigInteger</span>[] factors = factor(i);</span><br><span class="line">        ++count;</span><br><span class="line">        encodeIntoResponse(resp, factors);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<li><strong>先检查后执行（Check-Then-Act）</strong><br>延迟性初始化<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@NotThreadSafe<span class="keyword"></span><br><span class="line">public</span> class LazyInitRace &#123;</span><br><span class="line">   <span class="keyword"> private</span> ExpensiveObject<span class="instruction"> instance </span>= null;</span><br><span class="line">   <span class="keyword"> public</span> ExpensiveObject<span class="function"> getInstance(</span><span class="function">)</span> &#123;</span><br><span class="line">       <span class="instruction"> if </span>(instance == null<span class="function">)</span></span><br><span class="line">           <span class="instruction"> instance </span>=<span class="instruction"> new </span>ExpensiveObject(<span class="function">)</span>;</span><br><span class="line">       <span class="instruction"> return </span>instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 </li>
+</ol>
+<a id="more"></a>
+<ul>
+<li><strong>读取-修改-写入</strong><br>递增运算<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@NotThreadSafe</span></span><br><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">UnsafeCountingFactorizer</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">GenericServlet</span> <span class="title">implements</span> <span class="title">Servlet</span> &#123;</span></span><br><span class="line">    <span class="keyword">private</span> long count = <span class="number">0</span>;</span><br><span class="line">    public void service(<span class="type">ServletRequest</span> req, <span class="type">ServletResponse</span> resp) &#123;</span><br><span class="line">        <span class="type">BigInteger</span> i = extractFromRequest(req);</span><br><span class="line">        <span class="type">BigInteger</span>[] factors = factor(i);</span><br><span class="line">        ++count;</span><br><span class="line">        encodeIntoResponse(resp, factors);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol>
 <li><p>复合操作</p>
 <blockquote>
 <p>包含了一组必须以原子方式执行的操作以确保线程安全性</p>
@@ -109,12 +269,30 @@
 </blockquote>
 ]]></content>
     <summary type="html">
-    <![CDATA[<h2 id="u7B2C_u4E8C_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027"><a href="#u7B2C_u4E8C_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027" class="headerlink" tit]]>
+    <![CDATA[<h2 id="u7B2C_u4E8C_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027"><a href="#u7B2C_u4E8C_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027" class="headerlink" title="第二章 线程安全性"></a>第二章 线程安全性</h2><h3 id="u7EBF_u7A0B_u5B89_u5168_u6027"><a href="#u7EBF_u7A0B_u5B89_u5168_u6027" class="headerlink" title="线程安全性"></a>线程安全性</h3><ol>
+<li>当多个线程访问某个类时,这个类始终都能表现出正确的行为</li>
+<li>无状态对象一定是线程安全的<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@ThreadSafe</span></span><br><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">StatelessFactorizer</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">GenericServlet</span> <span class="title">implements</span> <span class="title">Servlet</span> &#123;</span></span><br><span class="line">    public void service(<span class="type">ServletRequest</span> req, <span class="type">ServletResponse</span> resp) &#123;</span><br><span class="line">        <span class="type">BigInteger</span> i = extractFromRequest(req);</span><br><span class="line">        <span class="type">BigInteger</span>[] factors = factor(i);</span><br><span class="line">        encodeIntoResponse(resp, factors);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="u539F_u5B50_u6027"><a href="#u539F_u5B50_u6027" class="headerlink" title="原子性"></a>原子性</h3><ol>
+<li><p>竞态条件(Race Condition) </p>
+<blockquote>
+<p>当某个计算的正确性取决于多个线程的交替执行时序时，那么就会发生竞态条件</p>
+</blockquote>
+<ul>
+<li><strong>先检查后执行（Check-Then-Act）</strong><br>延迟性初始化<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@NotThreadSafe<span class="keyword"></span><br><span class="line">public</span> class LazyInitRace &#123;</span><br><span class="line">   <span class="keyword"> private</span> ExpensiveObject<span class="instruction"> instance </span>= null;</span><br><span class="line">   <span class="keyword"> public</span> ExpensiveObject<span class="function"> getInstance(</span><span class="function">)</span> &#123;</span><br><span class="line">       <span class="instruction"> if </span>(instance == null<span class="function">)</span></span><br><span class="line">           <span class="instruction"> instance </span>=<span class="instruction"> new </span>ExpensiveObject(<span class="function">)</span>;</span><br><span class="line">       <span class="instruction"> return </span>instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>]]>
+    
     </summary>
     
       <category term="JCIP" scheme="http://bettersth.xyz/tags/JCIP/"/>
     
       <category term="Java" scheme="http://bettersth.xyz/tags/Java/"/>
+    
+      <category term="读书笔记" scheme="http://bettersth.xyz/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
@@ -123,11 +301,11 @@
     <link href="http://bettersth.xyz/2016/01/18/modify-NameCheap-DNS/"/>
     <id>http://bettersth.xyz/2016/01/18/modify-NameCheap-DNS/</id>
     <published>2016-01-18T05:53:38.000Z</published>
-    <updated>2016-01-18T05:53:38.217Z</updated>
+    <updated>2016-01-22T06:05:59.609Z</updated>
     <content type="html"><![CDATA[<p>因为域名是在NameCheap上，使用DNSPOD解析域名，自然需要做相应的配置，可是DNSPOD官方网站的文档也是旧版的，为了方便有需要的朋友，现在将新版的配置方法共享出来。<br>旧版地址：<a href="https://support.dnspod.cn/Kb/showarticle/?qtype=%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B&amp;tsid=47" title="NameCheap注册商域名修改DNS地址" target="_blank" rel="external">NameCheap注册商域名修改DNS地址</a></p>
 <ol>
 <li>登录<a href="http:www.namecheap.com" title="NameCheap" target="_blank" rel="external">NameCheap</a></li>
-<li>打开<a href="https://ap.www.namecheap.com/Domains/DomainOnly" title="域名管理列表" target="_blank" rel="external">域名管理列表</a><br><img src="http://7xp9un.com1.z0.glb.clouddn.com/blog/modifyDNS/screenshot1.png" alt="域名管理列表"></li>
+<li>打开<a href="https://ap.www.namecheap.com/Domains/DomainOnly" title="域名管理列表" target="_blank" rel="external">域名管理列表</a><br><img src="http://7xp9un.com1.z0.glb.clouddn.com/blog/modifyDNS/screenshot1.png" alt="域名管理列表"><a id="more"></a></li>
 <li>选择对应的域名点击点击manager进行设置</li>
 <li>在Nameservers选项下选择Custom<br><img src="http://7xp9un.com1.z0.glb.clouddn.com/blog/modifyDNS/screenshot2.png" alt="NameServers类型选择"></li>
 <li>点击Add NameServer输入dnspod的DNS短地址：<br> f1g1ns1.dnspod.net<br> f1g1ns2.dnspod.net<br><img src="http://7xp9un.com1.z0.glb.clouddn.com/blog/modifyDNS/screenshot3.png" alt="DNS域名管理"></li>
@@ -135,7 +313,11 @@
 </ol>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>因为域名是在NameCheap上，使用DNSPOD解析域名，自然需要做相应的配置，可是DNSPOD官方网站的文档也是旧版的，为了方便有需要的朋友，现在将新版的配置方法共享出来。<br>旧版地址：<a href="https://support.dnspod.cn/Kb/sh]]>
+    <![CDATA[<p>因为域名是在NameCheap上，使用DNSPOD解析域名，自然需要做相应的配置，可是DNSPOD官方网站的文档也是旧版的，为了方便有需要的朋友，现在将新版的配置方法共享出来。<br>旧版地址：<a href="https://support.dnspod.cn/Kb/showarticle/?qtype=%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D%E5%8F%8A%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B&amp;tsid=47" title="NameCheap注册商域名修改DNS地址">NameCheap注册商域名修改DNS地址</a></p>
+<ol>
+<li>登录<a href="http:www.namecheap.com" title="NameCheap">NameCheap</a></li>
+<li>打开<a href="https://ap.www.namecheap.com/Domains/DomainOnly" title="域名管理列表">域名管理列表</a><br><img src="http://7xp9un.com1.z0.glb.clouddn.com/blog/modifyDNS/screenshot1.png" alt="域名管理列表">]]>
+    
     </summary>
     
   </entry>
@@ -145,11 +327,12 @@
     <link href="http://bettersth.xyz/2015/12/29/java-double-precision/"/>
     <id>http://bettersth.xyz/2015/12/29/java-double-precision/</id>
     <published>2015-12-29T10:09:21.000Z</published>
-    <updated>2016-01-18T06:37:57.624Z</updated>
+    <updated>2016-01-22T02:29:13.540Z</updated>
     <content type="html"><![CDATA[<h1 id="java_u4E2D_u8FDB_u884Cdouble_u6570_u636E_u8BA1_u7B97_u7684_u65F6_u5019_u4F1A_u51FA_u73B0_u7CBE_u5EA6_u95EE_u9898_u3002"><a href="#java_u4E2D_u8FDB_u884Cdouble_u6570_u636E_u8BA1_u7B97_u7684_u65F6_u5019_u4F1A_u51FA_u73B0_u7CBE_u5EA6_u95EE_u9898_u3002" class="headerlink" title="java中进行double数据计算的时候会出现精度问题。"></a>java中进行double数据计算的时候会出现精度问题。</h1><h2 id="u95EE_u9898_u590D_u73B0_uFF1A"><a href="#u95EE_u9898_u590D_u73B0_uFF1A" class="headerlink" title="问题复现："></a>问题复现：</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> DoublePrecision &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Double add :"</span> + (<span class="number">1.01</span> + <span class="number">2.01</span>));</span><br><span class="line">        System.out.println(<span class="string">"Double sub :"</span> + (<span class="number">2.01</span> - <span class="number">1.02</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>得到如下结果<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">Double</span> <span class="tag">add</span> <span class="pseudo">:3</span><span class="class">.0199999999999996</span></span><br><span class="line"><span class="tag">Double</span> <span class="tag">sub</span> <span class="pseudo">:0</span><span class="class">.9899999999999998</span></span><br></pre></td></tr></table></figure></p>
 <p>可以看到精度出现了问题。所以对于高精度的运算double是不适合的。<br>为什么会出现精度问题可以参考这篇博文<a href="http://blog.csdn.net/abing37/article/details/5332798" title="java float double精度为什么会丢失？浅谈java的浮点数精度问题" target="_blank" rel="external">java float double精度为什么会丢失？浅谈java的浮点数精度问题</a></p>
-<h2 id="u5982_u4F55_u89E3_u51B3_uFF1F"><a href="#u5982_u4F55_u89E3_u51B3_uFF1F" class="headerlink" title="如何解决？"></a>如何解决？</h2><p>使用BigDecimal类。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">import java.math.BigDecimal;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> DoublePrecision &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Double add :"</span> + (<span class="number">1.01</span> + <span class="number">2.01</span>));</span><br><span class="line">        System.out.println(<span class="string">"Double sub :"</span> + (<span class="number">2.01</span> - <span class="number">1.02</span>));</span><br><span class="line">        System.out.println(<span class="string">"BigDecimal add :"</span> + BigDecimalUtil.add(<span class="number">1.01</span>, <span class="number">2.01</span>));</span><br><span class="line">        System.out.println(<span class="string">"BigDecimal sub :"</span> + BigDecimalUtil.subtract(<span class="number">2.01</span>, <span class="number">1.02</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> BigDecimalUtil &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> BigDecimal <span class="title">add</span><span class="params">(<span class="keyword">double</span> num1, <span class="keyword">double</span> num2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BigDecimal.valueOf(num1).add(BigDecimal.valueOf(num2));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> BigDecimal <span class="title">subtract</span><span class="params">(<span class="keyword">double</span> num1, <span class="keyword">double</span> num2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> BigDecimal(Double.toString(num1)).subtract(<span class="keyword">new</span> BigDecimal(Double.toString(num2)));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="u5982_u4F55_u89E3_u51B3_uFF1F"><a href="#u5982_u4F55_u89E3_u51B3_uFF1F" class="headerlink" title="如何解决？"></a>如何解决？</h2><a id="more"></a>
+<p>使用BigDecimal类。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">import java.math.BigDecimal;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> DoublePrecision &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Double add :"</span> + (<span class="number">1.01</span> + <span class="number">2.01</span>));</span><br><span class="line">        System.out.println(<span class="string">"Double sub :"</span> + (<span class="number">2.01</span> - <span class="number">1.02</span>));</span><br><span class="line">        System.out.println(<span class="string">"BigDecimal add :"</span> + BigDecimalUtil.add(<span class="number">1.01</span>, <span class="number">2.01</span>));</span><br><span class="line">        System.out.println(<span class="string">"BigDecimal sub :"</span> + BigDecimalUtil.subtract(<span class="number">2.01</span>, <span class="number">1.02</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> BigDecimalUtil &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> BigDecimal <span class="title">add</span><span class="params">(<span class="keyword">double</span> num1, <span class="keyword">double</span> num2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BigDecimal.valueOf(num1).add(BigDecimal.valueOf(num2));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> BigDecimal <span class="title">subtract</span><span class="params">(<span class="keyword">double</span> num1, <span class="keyword">double</span> num2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> BigDecimal(Double.toString(num1)).subtract(<span class="keyword">new</span> BigDecimal(Double.toString(num2)));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>结果如下：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">Double</span> <span class="tag">add</span> <span class="pseudo">:3</span><span class="class">.0199999999999996</span></span><br><span class="line"><span class="tag">Double</span> <span class="tag">sub</span> <span class="pseudo">:0</span><span class="class">.9899999999999998</span></span><br><span class="line"><span class="tag">BigDecimal</span> <span class="tag">add</span> <span class="pseudo">:3</span><span class="class">.02</span></span><br><span class="line"><span class="tag">BigDecimal</span> <span class="tag">sub</span> <span class="pseudo">:0</span><span class="class">.99</span></span><br></pre></td></tr></table></figure></p>
 <p>可以看到使用BigDecimal能够解决double计算的精度问题。</p>
 <blockquote>
@@ -159,7 +342,11 @@
 <h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>对高精度运算使用BigDecimal,尽量避免使用double计算以免精度丢失。</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<h1 id="java_u4E2D_u8FDB_u884Cdouble_u6570_u636E_u8BA1_u7B97_u7684_u65F6_u5019_u4F1A_u51FA_u73B0_u7CBE_u5EA6_u95EE_u9898_u3002"><a href="#ja]]>
+    <![CDATA[<h1 id="java_u4E2D_u8FDB_u884Cdouble_u6570_u636E_u8BA1_u7B97_u7684_u65F6_u5019_u4F1A_u51FA_u73B0_u7CBE_u5EA6_u95EE_u9898_u3002"><a href="#java_u4E2D_u8FDB_u884Cdouble_u6570_u636E_u8BA1_u7B97_u7684_u65F6_u5019_u4F1A_u51FA_u73B0_u7CBE_u5EA6_u95EE_u9898_u3002" class="headerlink" title="java中进行double数据计算的时候会出现精度问题。"></a>java中进行double数据计算的时候会出现精度问题。</h1><h2 id="u95EE_u9898_u590D_u73B0_uFF1A"><a href="#u95EE_u9898_u590D_u73B0_uFF1A" class="headerlink" title="问题复现："></a>问题复现：</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> DoublePrecision &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Double add :"</span> + (<span class="number">1.01</span> + <span class="number">2.01</span>));</span><br><span class="line">        System.out.println(<span class="string">"Double sub :"</span> + (<span class="number">2.01</span> - <span class="number">1.02</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>得到如下结果<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">Double</span> <span class="tag">add</span> <span class="pseudo">:3</span><span class="class">.0199999999999996</span></span><br><span class="line"><span class="tag">Double</span> <span class="tag">sub</span> <span class="pseudo">:0</span><span class="class">.9899999999999998</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看到精度出现了问题。所以对于高精度的运算double是不适合的。<br>为什么会出现精度问题可以参考这篇博文<a href="http://blog.csdn.net/abing37/article/details/5332798" title="java float double精度为什么会丢失？浅谈java的浮点数精度问题">java float double精度为什么会丢失？浅谈java的浮点数精度问题</a></p>
+<h2 id="u5982_u4F55_u89E3_u51B3_uFF1F"><a href="#u5982_u4F55_u89E3_u51B3_uFF1F" class="headerlink" title="如何解决？"></a>如何解决？</h2>]]>
+    
     </summary>
     
       <category term="Java" scheme="http://bettersth.xyz/tags/Java/"/>
