@@ -4,8 +4,27 @@
 
     
   <url>
+    <loc>http://bettersth.xyz/2016/03/14/sublime-python-pep8-autoformat-plugin/</loc>
+    <lastmod>2016-03-14T10:01:01.113Z</lastmod>
+    <data>
+        <display>
+        <title>Sublime Python PEP8 Autoformat插件</title>
+        <pubTime>2016-03-14T09:53:52.000Z</pubTime>
+        
+        <tag>Python</tag>
+         
+        <tag>Sublime</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://bettersth.xyz/2016/01/18/modify-NameCheap-DNS/</loc>
-    <lastmod>2016-01-22T06:05:59.609Z</lastmod>
+    <lastmod>2016-01-22T06:05:59.967Z</lastmod>
     <data>
         <display>
         <title>NameCheap注册商域名修改DNS地址（新版）</title>
@@ -42,7 +61,7 @@
     
   <url>
     <loc>http://bettersth.xyz/2016/01/19/generate-site-map/</loc>
-    <lastmod>2016-01-22T02:34:40.720Z</lastmod>
+    <lastmod>2016-01-22T02:35:29.432Z</lastmod>
     <data>
         <display>
         <title>Hexo生成SiteMap</title>
