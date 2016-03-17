@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://bettersth.xyz/"/>
-  <updated>2016-03-14T10:01:01.113Z</updated>
+  <updated>2016-03-17T08:24:53.428Z</updated>
   <id>http://bettersth.xyz/</id>
   
   <author>
@@ -13,6 +13,25 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[糗事百科Python爬虫实战]]></title>
+    <link href="http://bettersth.xyz/2016/03/17/python-spider-demo-qiushibaike/"/>
+    <id>http://bettersth.xyz/2016/03/17/python-spider-demo-qiushibaike/</id>
+    <published>2016-03-17T08:24:53.000Z</published>
+    <updated>2016-03-17T08:24:53.428Z</updated>
+    <content type="html"><![CDATA[<p>最近开始学习Python爬虫，跟着<a href="http://cuiqingcai.com/990.html" title="Python爬虫实战一之爬取糗事百科段子" target="_blank" rel="external">Python爬虫实战一之爬取糗事百科段子</a>写了第一个爬虫。</p>
+<p>代码保存于<a href="https://github.com/andrewsth/PythonSpiderDemo" title="Python Spider Demo" target="_blank" rel="external">Python Spider Demo</a></p>
+<p>因为糗百的代码经常性会修改，导致正则表达式需要经常性更新，所以用教程里面的正则表达式爬数据的时候会出现问题，所以更新正则表达式如下：<br><figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml">pattern = re.compile('<span class="tag">&lt;<span class="title">div.*?author</span> <span class="attribute">clearfix</span>"&gt;</span>.*?<span class="tag">&lt;<span class="title">a.*?</span>&lt;<span class="attribute">img.</span>*?&lt;<span class="attribute">h2</span>&gt;</span>(.*?)<span class="tag">&lt;/<span class="title">h2</span>&gt;</span>.*?<span class="tag">&lt;/<span class="title">a</span>&gt;</span>.*?<span class="tag">&lt;<span class="title">div.*?'</span> +</span><br><span class="line">                     '<span class="attribute">content</span>"&gt;</span>(.*?)<span class="comment">&lt;!--(.*?)--&gt;</span>.*?<span class="tag">&lt;/<span class="title">div</span>&gt;</span>(.*?)<span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"stats.*?class="</span><span class="value">number"</span>&gt;</span>(.*?)<span class="tag">&lt;/<span class="title">i</span>&gt;</span>', re.S)</span></span><br></pre></td></tr></table></figure></p>
+<p>效果如下：<br><img src="http://7xp9un.com1.z0.glb.clouddn.com/blog%2FpythonSpiderDemo%2Fqiushibaikeresult.png" alt="效果图"></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>最近开始学习Python爬虫，跟着<a href="http://cuiqingcai.com/990.html" title="Python爬虫实战一之爬取糗事百科段子" target="_blank" rel="external">Python爬虫实战一之爬取糗事百科段]]>
+    </summary>
+    
+      <category term="Python" scheme="http://bettersth.xyz/tags/Python/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Sublime Python PEP8 Autoformat插件]]></title>
