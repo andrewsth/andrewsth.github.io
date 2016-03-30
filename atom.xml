@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://bettersth.xyz/"/>
-  <updated>2016-03-30T11:29:31.987Z</updated>
+  <updated>2016-03-30T11:37:25.329Z</updated>
   <id>http://bettersth.xyz/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://bettersth.xyz/2016/03/30/http-the-definitive-guide-notes01/"/>
     <id>http://bettersth.xyz/2016/03/30/http-the-definitive-guide-notes01/</id>
     <published>2016-03-30T11:29:31.000Z</published>
-    <updated>2016-03-30T11:29:31.987Z</updated>
+    <updated>2016-03-30T11:37:25.329Z</updated>
     <content type="html"><![CDATA[<h1 id="HTTP__u6982_u8FF0"><a href="#HTTP__u6982_u8FF0" class="headerlink" title="HTTP 概述"></a>HTTP 概述</h1><h2 id="u8D44_u6E90"><a href="#u8D44_u6E90" class="headerlink" title="资源"></a>资源</h2><h3 id="u5A92_u4F53_u7C7B_u578B"><a href="#u5A92_u4F53_u7C7B_u578B" class="headerlink" title="媒体类型"></a>媒体类型</h3><ol>
 <li>HTML:text/html</li>
 <li>ASCII:text/plain</li>
@@ -28,7 +28,7 @@
 <li>QuickTime:video/quicktime</li>
 <li>PowerPoint:application/vnd.ms-powerpoint</li>
 </ol>
-<h3 id="URI"><a href="#URI" class="headerlink" title="URI"></a>URI</h3><p>Uniform Resource Identifier 统一资源标记符</p>
+<h3 id="URI"><a href="#URI" class="headerlink" title="URI"></a>URI</h3><p>Uniform Resource Identifier 统一资源标记符<br><a id="more"></a></p>
 <h3 id="URL"><a href="#URL" class="headerlink" title="URL"></a>URL</h3><p>统一资源定位符（URL）是资源标识符最常见的形式。URL 描述了一台特定服务器<br>上某资源的特定位置。<br>URL遵循的标准格式：</p>
 <ul>
 <li>URL 的第一部分被称为方案（scheme），说明了访问资源所使用的协议类型。这<br>部分通常就是HTTP 协议（<a href="http://）。" target="_blank" rel="external">http://）。</a></li>
@@ -117,7 +117,16 @@
 <h3 id="Agent_u4EE3_u7406"><a href="#Agent_u4EE3_u7406" class="headerlink" title="Agent代理"></a>Agent代理</h3><p>用户Agent 代理（或者简称为Agent 代理）是代表用户发起HTTP 请求的客户端程<br>序。所有发布Web 请求的应用程序都是HTTP Agent 代理。<br><img src="http://7xp9un.com1.z0.glb.clouddn.com/blog%2FhttpChapter1%2FagentConcept.png" alt="Agent代理"></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<h1 id="HTTP__u6982_u8FF0"><a href="#HTTP__u6982_u8FF0" class="headerlink" title="HTTP 概述"></a>HTTP 概述</h1><h2 id="u8D44_u6E90"><a href="#u8]]>
+    <![CDATA[<h1 id="HTTP__u6982_u8FF0"><a href="#HTTP__u6982_u8FF0" class="headerlink" title="HTTP 概述"></a>HTTP 概述</h1><h2 id="u8D44_u6E90"><a href="#u8D44_u6E90" class="headerlink" title="资源"></a>资源</h2><h3 id="u5A92_u4F53_u7C7B_u578B"><a href="#u5A92_u4F53_u7C7B_u578B" class="headerlink" title="媒体类型"></a>媒体类型</h3><ol>
+<li>HTML:text/html</li>
+<li>ASCII:text/plain</li>
+<li>JPEG:image/jpeg</li>
+<li>GIF:image/gif</li>
+<li>QuickTime:video/quicktime</li>
+<li>PowerPoint:application/vnd.ms-powerpoint</li>
+</ol>
+<h3 id="URI"><a href="#URI" class="headerlink" title="URI"></a>URI</h3><p>Uniform Resource Identifier 统一资源标记符<br>]]>
+    
     </summary>
     
       <category term="HTTP" scheme="http://bettersth.xyz/tags/HTTP/"/>
