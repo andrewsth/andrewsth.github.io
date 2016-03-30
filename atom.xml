@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://bettersth.xyz/"/>
-  <updated>2016-03-17T08:24:53.428Z</updated>
+  <updated>2016-03-30T11:29:31.987Z</updated>
   <id>http://bettersth.xyz/</id>
   
   <author>
@@ -13,6 +13,116 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[HTTP权威指南 笔记一]]></title>
+    <link href="http://bettersth.xyz/2016/03/30/http-the-definitive-guide-notes01/"/>
+    <id>http://bettersth.xyz/2016/03/30/http-the-definitive-guide-notes01/</id>
+    <published>2016-03-30T11:29:31.000Z</published>
+    <updated>2016-03-30T11:29:31.987Z</updated>
+    <content type="html"><![CDATA[<h1 id="HTTP__u6982_u8FF0"><a href="#HTTP__u6982_u8FF0" class="headerlink" title="HTTP 概述"></a>HTTP 概述</h1><h2 id="u8D44_u6E90"><a href="#u8D44_u6E90" class="headerlink" title="资源"></a>资源</h2><h3 id="u5A92_u4F53_u7C7B_u578B"><a href="#u5A92_u4F53_u7C7B_u578B" class="headerlink" title="媒体类型"></a>媒体类型</h3><ol>
+<li>HTML:text/html</li>
+<li>ASCII:text/plain</li>
+<li>JPEG:image/jpeg</li>
+<li>GIF:image/gif</li>
+<li>QuickTime:video/quicktime</li>
+<li>PowerPoint:application/vnd.ms-powerpoint</li>
+</ol>
+<h3 id="URI"><a href="#URI" class="headerlink" title="URI"></a>URI</h3><p>Uniform Resource Identifier 统一资源标记符</p>
+<h3 id="URL"><a href="#URL" class="headerlink" title="URL"></a>URL</h3><p>统一资源定位符（URL）是资源标识符最常见的形式。URL 描述了一台特定服务器<br>上某资源的特定位置。<br>URL遵循的标准格式：</p>
+<ul>
+<li>URL 的第一部分被称为方案（scheme），说明了访问资源所使用的协议类型。这<br>部分通常就是HTTP 协议（<a href="http://）。" target="_blank" rel="external">http://）。</a></li>
+<li>第二部分给出了服务器的因特网地址（比如，www.joes-hardware.com）。</li>
+<li>其余部分指定了 Web 服务器上的某个资源（比如，/specials/saw-blade.gif）</li>
+</ul>
+<h3 id="URN"><a href="#URN" class="headerlink" title="URN"></a>URN</h3><p>URI 的第二种形式就是统一资源名（URN）。URN 是作为特定内容的唯一名称使用<br>的，与目前的资源所在地无关。</p>
+<h2 id="u4E8B_u52A1"><a href="#u4E8B_u52A1" class="headerlink" title="事务"></a>事务</h2><p>一个HTTP 事务由一条（从客户端发往服务器的）请求命令和一个（从服务器<br>发回客户端的）响应结果组成。</p>
+<h3 id="u65B9_u6CD5"><a href="#u65B9_u6CD5" class="headerlink" title="方法"></a>方法</h3><table>
+<thead>
+<tr>
+<th>HTTP方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>从服务器向客户端发送命名资源</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>将来自客户端的数据存储到一个命名的服务器资源中去</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>将服务器中删除命名资源</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>将客户端数据发送到一个服务器网关应用程序</td>
+</tr>
+<tr>
+<td>HEAD</td>
+<td>将发送命名资源响应中的HTTP首部</td>
+</tr>
+</tbody>
+</table>
+<h3 id="u72B6_u6001_u7801"><a href="#u72B6_u6001_u7801" class="headerlink" title="状态码"></a>状态码</h3><p>每条HTTP 响应报文返回时都会携带一个状态码。状态码是一个三位数字的代码，<br>告知客户端请求是否成功，或者是否需要采取其他动作。</p>
+<h3 id="Web_u9875_u9762_u4E2D_u53EF_u4EE5_u5305_u542B_u591A_u4E2A_u5BF9_u8C61"><a href="#Web_u9875_u9762_u4E2D_u53EF_u4EE5_u5305_u542B_u591A_u4E2A_u5BF9_u8C61" class="headerlink" title="Web页面中可以包含多个对象"></a>Web页面中可以包含多个对象</h3><h2 id="u62A5_u6587"><a href="#u62A5_u6587" class="headerlink" title="报文"></a>报文</h2><ul>
+<li>从Web 客户端发往Web 服务器的HTTP 报文称为请求报文（request message）</li>
+<li>从服务器发往客户端的报文称为响应报文（response message）<br>HTTP报文包括三部分：</li>
+</ul>
+<ol>
+<li>起始行<br> 报文的第一行就是起始行，在请求报文中用来说明要做些什么，在响应报文中说<br>明出现了什么情况。</li>
+<li>首部字段<br> 起始行后面有零个或多个首部字段。每个首部字段都包含一个名字和一个值，为<br>了便于解析，两者之间用冒号（:）来分隔。首部以一个空行结束。</li>
+<li>主体<br> 空行之后就是可选的报文主体了，其中包含了所有类型的数据。请求主体中包括<br>了要发送给Web 服务器的数据；响应主体中装载了要返回给客户端的数据。</li>
+</ol>
+<p>简单的报文实例：<br>    <img src="http://7xp9un.com1.z0.glb.clouddn.com/blog%2FhttpChapter1%2FsimpleHttpRequestDemo.png" alt="http://www.joes-hardware.com/tools.html 的GET 事务实例" title="http://www.joes-hardware.com/tools.html 的GET 事务实例"></p>
+<h2 id="u8FDE_u63A5"><a href="#u8FDE_u63A5" class="headerlink" title="连接"></a>连接</h2><h3 id="TCP/IP"><a href="#TCP/IP" class="headerlink" title="TCP/IP"></a>TCP/IP</h3><p>HTTP 是个应用层协议。HTTP 无需操心网络通信的具体细节；它把联网的细节都<br>交给了通用、可靠的因特网传输协议TCP/IP。<br>TCP:</p>
+<ul>
+<li>无差错的数据传输</li>
+<li>按序传输（数据综述会按照发送的顺序到达）</li>
+<li>未分段的数据流（可以在任意时刻以任意尺寸将数据发送出去）<br>HTTP 协议位于TCP 的上层。HTTP 使用TCP 来传输其报文数<br>据。与之类似，TCP 则位于IP 的上层</li>
+</ul>
+<h3 id="u8FDE_u63A5_u3001IP_u5730_u5740_u53CA_u7AEF_u53E3_u53F7"><a href="#u8FDE_u63A5_u3001IP_u5730_u5740_u53CA_u7AEF_u53E3_u53F7" class="headerlink" title="连接、IP地址及端口号"></a>连接、IP地址及端口号</h3><p>在HTTP 客户端向服务器发送报文之前，需要用网际协议（Internet Protocol，IP）<br>地址和端口号在客户端和服务器之间建立一条TCP/IP 连接。<br><img src="http://7xp9un.com1.z0.glb.clouddn.com/blog%2FhttpChapter1%2FconnectionProcess.png" alt="基本的浏览器连接处理" title="基本的浏览器连接处理"><br>浏览器连接处理步骤：</p>
+<ol>
+<li>浏览器从URL中解析出服务器的主机名</li>
+<li>浏览器将服务器的主机名转换成服务器的IP地址</li>
+<li>浏览器将端口号（如果有的话）从URL中解析出来</li>
+<li>浏览器建立一条与Web服务器的TCP连接</li>
+<li>浏览器向服务器发送一条HTTP请求报文</li>
+<li>服务器向浏览器回送一条HTTP相应报文</li>
+<li>关闭连接，浏览器显示文档</li>
+</ol>
+<h3 id="u4F7F_u7528Telnet_u5B9E_u4F8B"><a href="#u4F7F_u7528Telnet_u5B9E_u4F8B" class="headerlink" title="使用Telnet实例"></a>使用Telnet实例</h3><p><img src="http://7xp9un.com1.z0.glb.clouddn.com/blog%2FhttpChapter1%2FtelnetHttpRequest.png" alt="使用Telnet的HTTP事务" title="使用Telnet的HTTP事务"></p>
+<h2 id="u534F_u8BAE_u7248_u672C"><a href="#u534F_u8BAE_u7248_u672C" class="headerlink" title="协议版本"></a>协议版本</h2><ul>
+<li>HTTP/0.9</li>
+<li>HTTP/1.0</li>
+<li>HTTP/1.0+</li>
+<li>HTTP/1.1</li>
+<li>HTTP-NG(又名HTTP/2.0)</li>
+</ul>
+<h2 id="Web_u7684_u7ED3_u6784_u7EC4_u4EF6"><a href="#Web_u7684_u7ED3_u6784_u7EC4_u4EF6" class="headerlink" title="Web的结构组件"></a>Web的结构组件</h2><p>重要的应用程序：</p>
+<ul>
+<li>代理<br>  位于客户端和服务器之间的HTTP中间实体</li>
+<li>缓存<br>  HTTP的仓库，使常用页面的副本可以保持在离客户端更近的地方</li>
+<li>网关<br>  连接其他应用程序的特殊Web服务器</li>
+<li>隧道<br>  对HTTP通信报文进行盲转发的特殊代理</li>
+<li>Agent代理<br>  发起自动HTTP请求的半智能Web客户端</li>
+</ul>
+<h3 id="u4EE3_u7406"><a href="#u4EE3_u7406" class="headerlink" title="代理"></a>代理</h3><p>代理位于客户端和服务器之间，接收所有客户端的HTTP 请求，并将这些请求转发给服务器（可能会对请求进行修改之后转发）。对用户来说，这些应用程序就是一个代理，代表用户访问服务器。<br><img src="http://7xp9un.com1.z0.glb.clouddn.com/blog%2FhttpChapter1%2FproxyConcept.png" alt="代理"></p>
+<h3 id="u7F13_u5B58"><a href="#u7F13_u5B58" class="headerlink" title="缓存"></a>缓存</h3><p>Web 缓存（Web cache）或代理缓存（proxy cache）是一种特殊的HTTP 代理服务<br>器，可以将经过代理传送的常用文档复制保存起来。下一个请求同一文档的客户端<br>就可以享受缓存的私有副本所提供的服务了<br><img src="http://7xp9un.com1.z0.glb.clouddn.com/blog%2FhttpChapter1%2FcacheConcept.png" alt="缓存"></p>
+<h3 id="u7F51_u5173"><a href="#u7F51_u5173" class="headerlink" title="网关"></a>网关</h3><p>网关（gateway）是一种特殊的服务器，作为其他服务器的中间实体使用。通常用于<br>将HTTP 流量转换成其他的协议。网关接受请求时就好像自己是资源的源端服务器<br>一样。客户端可能并不知道自己正在与一个网关进行通信。<br><img src="http://7xp9un.com1.z0.glb.clouddn.com/blog%2FhttpChapter1%2FgatewayConcept.png" alt="网关"></p>
+<h3 id="u96A7_u9053"><a href="#u96A7_u9053" class="headerlink" title="隧道"></a>隧道</h3><p>隧道（tunnel）是建立起来之后，就会在两条连接之间对原始数据进行盲转发的<br>HTTP 应用程序。HTTP 隧道通常用来在一条或多条HTTP 连接上转发非HTTP 数<br>据，转发时不会窥探数据。<br>HTTP 隧道的一种常见用途是通过HTTP 连接承载加密的安全套接字层（SSL，<br>Secure Sockets Layer）流量，这样SSL 流量就可以穿过只允许Web 流量通过的防<br>火墙了。<br><img src="http://7xp9un.com1.z0.glb.clouddn.com/blog%2FhttpChapter1%2FtunnelConcept.png" alt="隧道"></p>
+<h3 id="Agent_u4EE3_u7406"><a href="#Agent_u4EE3_u7406" class="headerlink" title="Agent代理"></a>Agent代理</h3><p>用户Agent 代理（或者简称为Agent 代理）是代表用户发起HTTP 请求的客户端程<br>序。所有发布Web 请求的应用程序都是HTTP Agent 代理。<br><img src="http://7xp9un.com1.z0.glb.clouddn.com/blog%2FhttpChapter1%2FagentConcept.png" alt="Agent代理"></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="HTTP__u6982_u8FF0"><a href="#HTTP__u6982_u8FF0" class="headerlink" title="HTTP 概述"></a>HTTP 概述</h1><h2 id="u8D44_u6E90"><a href="#u8]]>
+    </summary>
+    
+      <category term="HTTP" scheme="http://bettersth.xyz/tags/HTTP/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[糗事百科Python爬虫实战]]></title>
